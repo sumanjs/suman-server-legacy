@@ -1,0 +1,25 @@
+{
+  "name": "suman-server",
+  "version": "0.0.11",
+  "description": "Server/DB for Suman test runner",
+  "main": "index.js",
+  "scripts": {
+    "test": "suman"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ORESoftware/suman-server.git"
+  },
+  "keywords": [
+    "Suman",
+    "test",
+    "runner",
+    "database"
+  ],
+  "author": "Olegzandr Denman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ORESoftware/suman-server/issues"
+  },
+  "homepage": "https://github.com/ORESoftware/suman-server#readme"
+}
