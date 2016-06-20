@@ -1,7 +1,7 @@
 {
   "name": "suman-server",
   "version": "0.0.11",
-  "description": "Server/DB for Suman test runner",
+  "description": "Server/DB/watcher for Suman test runner",
   "main": "index.js",
   "scripts": {
     "test": "suman"
@@ -9,6 +9,57 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ORESoftware/suman-server.git"
+  },
+  "dependencies": {
+    "adore": "^1.4.32",
+    "ansi-256-colors": "^1.1.0",
+    "ansi-styles": "^2.1.0",
+    "ascii-table": "0.0.8",
+    "async": "^1.5.0",
+    "body-parser": "^1.14.1",
+    "builtin-modules": "^1.1.1",
+    "chmodr": "^1.0.2",
+    "chokidar": "^1.5.1",
+    "colors": "^1.1.2",
+    "cookie-parser": "^1.4.0",
+    "dashdash": "^1.13.0",
+    "du": "^0.1.0",
+    "ejs": "^2.3.4",
+    "express": "^4.13.3",
+    "jquery": "^2.2.2",
+    "lodash": "^4.6.1",
+    "morgan": "^1.6.1",
+    "poolio": "^0.2.02",
+    "react": "^0.14.8",
+    "react-css": "0.0.2",
+    "react-dom": "^0.14.8",
+    "request": "^2.67.0",
+    "require-from-string": "^1.1.0",
+    "residence": "0.0.1",
+    "semver": "^5.1.0",
+    "serve-favicon": "^2.3.0",
+    "siamese": "^2.0.4",
+    "socket.io": "^1.4.5",
+    "socket.io-client": "^1.4.3",
+    "tcp-ping": "^0.1.1",
+    "underscore": "^1.8.3",
+    "v8flags": "^2.0.10"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-nodemon": "^2.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-requirejs": "^0.1.3",
+    "keypress": "^0.2.1",
+    "nodejs-dep-check": "^1.2.61",
+    "requirejs": "^2.2.0",
+    "should": "^8.3.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "keywords": [
     "Suman",

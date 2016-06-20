@@ -1,12 +1,13 @@
-define(function (require, exports, module) {
-const React = require('react');
+define(function (require, exports, module) {'use strict';
 
-const Section = require('./AccordionSection2');
+var React = require('react');
+
+var Section = require('./AccordionSection2');
 
 var Accordion = React.createClass({
     displayName: 'Accordion',
 
-    render: function () {
+    render: function render() {
         return React.createElement(
             'div',
             { className: 'main' },

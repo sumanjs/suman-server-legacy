@@ -1,1 +1,1 @@
-require('./server/bin/www');
+module.exports = require('./server/bin/www');
