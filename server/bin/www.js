@@ -20,6 +20,15 @@ process.on('uncaughtException', function (err) {
 	});
 });
 
+
+process.on('unhandledRejection', function (err) {
+	console.error('\n\n => Suman Server => Unhandled Rejection => ' + err.stack, '\n');
+	globalErr = err;
+	process.nextTick(function () {
+		process.exit(1);
+	});
+});
+
 /////////////////////////////////////////////////////////////
 
 //core

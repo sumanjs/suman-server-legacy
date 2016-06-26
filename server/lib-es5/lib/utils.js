@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('suman-utils')['utils'];
+module.exports = require('suman-utils/utils');

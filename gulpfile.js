@@ -17,7 +17,7 @@ const nodemon = require('gulp-nodemon');
 const requirejs = require('gulp-requirejs');
 
 //suman utils
-const sumanUtils = require('suman-utils');
+const defaultConfig = require('suman-utils/default.suman.conf.js');
 
 //args & env
 const argv = JSON.parse(JSON.stringify(process.argv));
@@ -90,7 +90,7 @@ gulp.task('nodemon', ['convert'], function () {
 		nodeArgs: ['--harmony'],
 		env: Object.assign({}, process.env, {
 			NODE_ENV: $node_env || 'development',
-			SUMAN_CONFIG: JSON.stringify(sumanUtils['default-config']),
+			SUMAN_CONFIG: JSON.stringify(defaultConfig),
 			SUMAN_SERVER_OPTS: ''
 		})
 

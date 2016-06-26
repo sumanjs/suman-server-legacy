@@ -22,7 +22,7 @@ const Pool = require('poolio');
 
 //project
 // const runTranspile = require('../../lib/transpile/run-transpile');
-const runTranspile = require('suman-utils')['run-transpile'];
+const runTranspile = require('suman-utils/run-transpile');
 
 //////////////////////////////////////////////////
 
@@ -211,6 +211,8 @@ function runTestWithSuman($tests) {
 	//note: we want to kill all suman workers that are
 	//currently running tests and writing to the watcher-output.log file
 	pool.killAllActiveWorkers();
+
+	console.log('All active poolio workers killed.');
 	
 	const promises = tests.map(function (t) {
 		return pool.any(pathHash[t]);

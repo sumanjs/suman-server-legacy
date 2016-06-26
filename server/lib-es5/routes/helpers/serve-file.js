@@ -30,8 +30,8 @@ module.exports = function (req, res) {
                 res.writeHead(200);
                 var stream = fs.createReadStream(fsPath).pipe(res); //calls res.end()
             } else {
-                    res.writeHead(500);
-                }
+                res.writeHead(500);
+            }
         } catch (err) {
             helpers.finishResponse(req, res);
         }

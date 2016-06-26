@@ -1,14 +1,20 @@
 'use strict';
 
 process.on('uncaughtException', function (e) {
-	if (process.env.SUMAN_DEBUG === 'yes') {
+	if (process.env.SUMAN_DEBUG === 'yes' || true) {
 		console.error('\n', ' => Suman watcher process uncaughtException:', e.stack || e, '\n');
 	}
 });
 
 process.on('error', function (e) {
-	if (process.env.SUMAN_DEBUG === 'yes') {
+	if (process.env.SUMAN_DEBUG === 'yes' || true) {
 		console.error('\n', ' => Suman watcher process error event:', e.stack || e, '\n');
+	}
+});
+
+process.on('unhandledRejection', function (e) {
+	if (process.env.SUMAN_DEBUG === 'yes' || true) {
+		console.error('\n', ' => Suman watcher process unhandledRejection event:', e.stack || e, '\n');
 	}
 });
 
@@ -27,7 +33,7 @@ process.on('message', function (m) {
 	try {
 		assert.equal(workId, m.__poolioWorkerId, ' => Suman watcher error, workId and workerId not equal values.');
 	} catch (e) {
-		console.error(e.stack);
+		console.error(e.stack || e);
 	}
 
 	if (process.env.SUMAN_DEBUG === 'yes') {
