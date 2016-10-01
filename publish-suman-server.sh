@@ -8,18 +8,18 @@ if [[ "$BRANCH" != "dev" ]]; then
   exit 1;
 fi
 
-git add . &&
-git add -A &&
-git commit -am "publish/release:${GIT_COMMIT_MSG}" &&
-git push &&
-git checkout -b master &&
-npm run remove-private-dirs &&
-npm run remove-private-files &&
-git add . &&
-git add -A &&
-git commit -am "publish/release:${GIT_COMMIT_MSG}" &&
-git push origin master -f &&
-git checkout dev &&
-git branch -D master
+git add .
+git add -A
+git commit -am "publish/release:${GIT_COMMIT_MSG}"
+git push
+git checkout -b master
+npm run remove-private-dirs
+npm run remove-private-files
 npm version patch -m "Upgrade for several reasons"
+git add .
+git add -A
+git commit -am "publish/release:${GIT_COMMIT_MSG}"
+git push origin master -f
+git checkout dev
+git branch -D master
 npm publish .
