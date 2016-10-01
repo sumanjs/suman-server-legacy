@@ -1,32 +1,31 @@
 var globalErr;
 
 process.on('exit', function (code) {
-	if (globalErr) {
-		console.error('\n\n => Suman Server => Uncaught Exception => ' + globalErr.stack + '\n\n');
-	}
-	console.log('\n => Suman server exiting with code => ', code, '\n');
+  if (globalErr) {
+    console.error('\n\n => Suman Server => Uncaught Exception => ' + globalErr.stack + '\n\n');
+  }
+  console.log('\n => Suman server exiting with code => ', code, '\n');
 });
 
 process.on('SIGINT', function (code) {
-	console.log('...SIGINT caught, code => ' + code, ', exiting ...');
-	process.exit(code);
+  console.log('...SIGINT caught, code => ' + code, ', exiting ...');
+  process.exit(code);
 });
 
 process.on('uncaughtException', function (err) {
-	console.error('\n\n => Suman Server => Uncaught Exception => ' + err.stack, '\n');
-	globalErr = err;
-	process.nextTick(function () {
-		process.exit(1);
-	});
+  console.error('\n\n => Suman Server => Uncaught Exception => ' + err.stack, '\n');
+  globalErr = err;
+  process.nextTick(function () {
+    process.exit(1);
+  });
 });
 
-
 process.on('unhandledRejection', function (err) {
-	console.error('\n\n => Suman Server => Unhandled Rejection => ' + err.stack, '\n');
-	globalErr = err;
-	process.nextTick(function () {
-		process.exit(1);
-	});
+  console.error('\n\n => Suman Server => Unhandled Rejection => ' + err.stack, '\n');
+  globalErr = err;
+  process.nextTick(function () {
+    process.exit(1);
+  });
 });
 
 /////////////////////////////////////////////////////////////
@@ -43,7 +42,6 @@ const async = require('async');
 const colors = require('colors');
 
 //////////////////////////////////////////////////////////////
-
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -68,7 +66,7 @@ const sumanConfig = global.sumanConfig = JSON.parse(process.env.SUMAN_CONFIG);
 const sumanExecutablePath = global.sumanExecutablePath = process.env.SUMAN_EXECUTABLE_PATH;
 
 if (process.env.SUMAN_DEBUG === 'yes') {
-	console.log(' => Suman config used: ', sumanConfig);
+  console.log(' => Suman config used: ', sumanConfig);
 }
 
 const sumanLogos = require('../lib-es5/lib/ascii');
@@ -76,39 +74,24 @@ console.log(sumanLogos.suman_alligator);
 
 const sumanServerOpts = process.env.SUMAN_SERVER_OPTS;
 const sumanCombinedOpts = global.sumanCombinedOpts = sumanServerOpts ? JSON.parse(sumanServerOpts) : {
-	sumanMatches: sumanConfig.match,
-	sumanNotMatches: sumanConfig.notMatch,
-	sumanHelperDirRoot: sumanConfig.sumanHelpersDir,
-	verbose: true,
-	vverbose: true
+  sumanMatches: sumanConfig.match,
+  sumanNotMatches: sumanConfig.notMatch,
+  sumanHelperDirRoot: sumanConfig.sumanHelpersDir,
+  verbose: true,
+  vverbose: true
 };
 
 Object.keys(sumanCombinedOpts).forEach(opt => {
-	global[opt] = sumanCombinedOpts[opt];
+  global[ opt ] = sumanCombinedOpts[ opt ];
 });
 
 const opts = global.sumanOpts = global.sumanOpts || {};
 opts.verbose = sumanCombinedOpts.verbose;
 opts.vverbose = sumanCombinedOpts.vverbose;
 
-////////////////////////////////////////////////////////////////////////
-
-//TODO possibly reconcile these with cmd line options
-// const testDir = global._sTestDir = path.resolve(root + '/' + (global.sumanConfig.testDir || 'test'));
-// const testSrcDir = global._sTestSrcDir = path.resolve(root + '/' + global.sumanConfig.testSrcDir);
-// const testDestDir = global._sTestDestDir = path.resolve(root + '/' + global.sumanConfig.testDestDir);
-// const testDirCopyDir = global._sTestDirCopyDir = path.resolve(root + '/' + (global.sumanConfig.testDirCopyDir || 'test-target'));
-
-// console.log('root',util.inspect(root));
-// console.log('testDir:', util.inspect(testDir));
-// console.log('testSrcDir:', util.inspect(testSrcDir));
-// console.log('testDestDir:', util.inspect(testDestDir));
-// console.log('testDirCopyDir:', util.inspect(testDirCopyDir));
-
 /////////////////////////////////////////////////////////////////////////
 
-
-/////////////////////////////////////////////////////////////////////////
+console.log('Suman server starting up...');
 
 const app = require('../app');
 app.set('port', process.env.PORT || '6969');
@@ -118,47 +101,45 @@ const httpServer = http.createServer(app);
 const sumanUtils = require('../lib-es5/lib/utils');
 
 async.parallel([
-	
-	function (cb) {
-		//ensure that results directory exists, handle any error that is not EEXISTS error
-		sumanUtils.makeResultsDir(true, function (err) {
-			cb(err);
-		});
-	},
-	function (cb) {
-		
-		httpServer.listen(app.get('port'));
-		httpServer.once('error', onError);
-		httpServer.once('listening', onListening);
-		socketServer(httpServer);
-		cb();
-		
-	}
+
+  function (cb) {
+
+    httpServer.listen(app.get('port'));
+    httpServer.once('error', onError);
+    httpServer.once('listening', onListening);
+    socketServer(httpServer);
+    cb();
+
+  },
+  function (cb) {
+    //ensure that results directory exists, handle any error that is not EEXISTS error
+    sumanUtils.makeResultsDir(true, cb);
+  }
 
 ], function (err, results) {
-	
-	if (err) {
-		throw err;
-	}
-	else {
-		if (results.filter(r => r).length) {
-			console.log('Results:', util.inspect(results));
-		}
-	}
-	
+
+  if (err) {
+    throw err;
+  }
+  else {
+    if (results.filter(r => r).length) {
+      console.log('Results:', util.inspect(results));
+    }
+  }
+
 });
 
 /////////////////////////////////////////////////////////////////////////
 
-function onError(error) {
-	console.error(error.stack);
+function onError (err) {
+  console.error(err.stack || err);
 }
 
-function onListening() {
-	
-	const addr = httpServer.address();
-	const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-	console.log('\tServer listening on ' + bind, ', CWD =', process.cwd() + '\n\n');
-	
+function onListening () {
+
+  const addr = httpServer.address();
+  const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
+  console.log('\tServer listening on ' + bind, ', CWD =', process.cwd() + '\n\n');
+
 }
 

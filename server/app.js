@@ -56,9 +56,7 @@ app.use(function (req, res, next) {
         })
     });
 
-    d.run(function () {
-        next();
-    })
+    d.run(next);
 
 });
 

@@ -18,7 +18,7 @@ process.on('unhandledRejection', function (e) {
 	}
 });
 
-var assert = require('assert');
+const assert = require('assert');
 
 process.on('message', function (m) {
 
@@ -48,9 +48,10 @@ process.on('message', function (m) {
 
 	//TODO: process.argv.push('--runner');
 	process.argv.push(fp);
-	require(process.env.SUMAN_EXECUTABLE_PATH);
-	// require('/Users/Olegzandr/WebstormProjects/suman/index.js');
-});
 
-//pre-load most likely files necessary, this saves milliseconds, but why not
-// require('./pre-load-these/pre-load');
+	//e.g. => require('/Users/Olegzandr/WebstormProjects/suman/index.js');
+	require(process.env.SUMAN_EXECUTABLE_PATH);
+
+
+
+});
