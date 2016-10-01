@@ -21,3 +21,5 @@ git commit -am "publish/release:${GIT_COMMIT_MSG}" &&
 git push origin master -f &&
 git checkout dev &&
 git branch -D master
+npm version patch -m "Upgrade for several reasons"
+npm publish .
