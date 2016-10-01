@@ -8,7 +8,7 @@ if [[ "$BRANCH" != "dev" ]]; then
   exit 1;
 fi
 
-npm version patch -m "Upgrade for several reasons"
+npm version patch --force -m "Upgrade for several reasons"
 git add .
 git add -A
 git commit -am "publish/release:${GIT_COMMIT_MSG}"
