@@ -46,6 +46,7 @@ process.on('message', function (m) {
 		});
 	}
 
+
 	//TODO: process.argv.push('--runner');
 	process.argv.push(fp);
 

@@ -1,9 +1,10 @@
+'use strict';
+
 process.on('uncaughtException', function (e) {
 	if (process.env.SUMAN_DEBUG === 'yes' || true) {
 		console.error('\n', ' => Suman watcher process uncaughtException:', e.stack || e, '\n');
 	}
 });
-
 
 process.on('error', function (e) {
 	if (process.env.SUMAN_DEBUG === 'yes' || true) {
@@ -17,23 +18,21 @@ process.on('unhandledRejection', function (e) {
 	}
 });
 
-
 const assert = require('assert');
 
 process.on('message', function (m) {
 
-	const workId = m.workId;
-	const fp = m.msg.testPath;
-	const transpile = m.msg.transpile;
+	var workId = m.workId;
+	var fp = m.msg.testPath;
+	var transpile = m.msg.transpile;
 
-	if(!transpile){
+	if (!transpile) {
 		process.argv.push('--no-transpile');
 	}
 
 	try {
 		assert.equal(workId, m.__poolioWorkerId, ' => Suman watcher error, workId and workerId not equal values.');
-	}
-	catch (e) {
+	} catch (e) {
 		console.error(e.stack || e);
 	}
 
@@ -42,19 +41,18 @@ process.on('message', function (m) {
 		console.log('=> SUMAN_DEBUG message => in poolio worker, workerId:', m.__poolioWorkerId);
 		console.log('=> SUMAN_DEBUG message => in poolio worker, message:', m);
 		console.log('=> SUMAN_DEBUG message => here are process.argv args:', '\n');
-		process.argv.forEach((val, index, array) => {
-			console.log(`${index}: ${val}`);
+		process.argv.forEach(function (val, index, array) {
+			console.log(index + ': ' + val);
 		});
 	}
 
+
 	//TODO: process.argv.push('--runner');
 	process.argv.push(fp);
+
+	//e.g. => require('/Users/Olegzandr/WebstormProjects/suman/index.js');
 	require(process.env.SUMAN_EXECUTABLE_PATH);
-	// require('/Users/Olegzandr/WebstormProjects/suman/index.js');
+
+
 
 });
-
-//pre-load most likely files necessary, this saves milliseconds, but why not
-// require('./pre-load-these/pre-load');
-
-
