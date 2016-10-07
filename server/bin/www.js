@@ -69,7 +69,7 @@ if (process.env.SUMAN_DEBUG === 'yes') {
   console.log(' => Suman config used: ', sumanConfig);
 }
 
-const sumanLogos = require('../lib-es5/lib/ascii');
+const sumanLogos = require('./ascii');
 console.log(sumanLogos.suman_alligator);
 
 const sumanServerOpts = process.env.SUMAN_SERVER_OPTS;
@@ -98,7 +98,7 @@ app.set('port', process.env.PORT || '6969');
 const socketServer = require('./socket-server');
 const httpServer = http.createServer(app);
 
-const sumanUtils = require('../lib-es5/lib/utils');
+const sumanUtils = require('./utils');
 
 async.parallel([
 
