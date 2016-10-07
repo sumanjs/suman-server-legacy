@@ -256,8 +256,6 @@ module.exports = function (server) {
 
         console.log('\n', 'Client connected.', '\n');
 
-        // socket.emit('message', 'listening');
-
         socket.on('disconnect', function () {
             console.log('\nClient disconnected.\n');
         });
@@ -268,19 +266,39 @@ module.exports = function (server) {
 
         socket.on('watch-project', function (data) {
 
-            socket.emit('watch-project-request-received', 'received');
+            process.nextTick(function(){
+                socket.emit('watch-project-request-received', 'received');
+            });
 
-            //TODO: throttle this so that if there are 50+ file changes only 2 requests make it...
-
+            //TODO: throttle this so that if there are 50+ file changes only 2 requests make it...!!
 
             console.log('watch-project request received!! => data => ', data);
 
-            const watcher = chokidar.watch(global.projectRoot, opts);
+            const projectWatcher = chokidar.watch(global.projectRoot, {
+                ignored: ['**/node_modules/**','**/test/**','**/*.txt', '**/*.log','**.git/**','**.idea/**'],
+                ignore: ['**/node_modules/**','**/test/**','**/*.txt', '**/*.log','**.git/**','**.idea/**'],
+                ignoreInitial: true
+            });
 
+            projectWatcher.once('ready', () => {
+                console.log(' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
+                const watched = projectWatcher.getWatched();
+                console.log(' => Suman server => watched paths:', watched);
+            });
 
-            watcher.on('change', function () {
+            projectWatcher.on('change', function (p) {
 
-                const ls = cp.spawn(sumanExecutablePath, [''], {
+                p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //for Webstorm support
+
+                console.log(`File ${p} has been changed`);
+
+                fs.writeFileSync(projectWatcherOutputLogPath,  //'w' flag truncates the file, the only time the file is truncated
+                    '\n\n => Suman watcher => file changed:\n' + p, {
+                        flags: 'w',
+                        flag: 'w'
+                    });
+
+                const ls = cp.spawn(sumanExecutablePath, ['test/test-src'], {
                     env: Object.assign({}, process.env, {
                         SUMAN_DEBUG: 'yes'
                     })
@@ -301,19 +319,10 @@ module.exports = function (server) {
                 ls.stderr.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
 
                 ls.on('close', function () {
-                    console.log('child process has "close" event, exiting...');
-                    process.exit(0);
+                    console.log('child process has "close" event.');
                 });
 
-
             });
-
-            watcher.on('ready', () => {
-                console.log(' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
-                const watched = watcher.getWatched();
-                console.log(' => Suman server => watched paths:', watched);
-            });
-
 
         });
 
