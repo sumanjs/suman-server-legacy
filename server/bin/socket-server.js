@@ -14,6 +14,8 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const util = require('util');
+const async = require('async');
+const assert = require('assert');
 
 //npm
 const socketio = require('socket.io');
@@ -266,17 +268,36 @@ module.exports = function (server) {
 
         socket.on('watch-project', function (data) {
 
-            process.nextTick(function(){
+
+            try {
+                data = JSON.parse(data);
+            }
+            catch(err){
+
+            }
+
+            const script = data.script;
+            var exclude = data.exclude || [];
+            var include = data.include || [];
+
+            const execStringArray = String(script).split(/\s+/);
+            const executable = execStringArray.shift();
+
+            assert(Array.isArray(exclude) && Array.isArray(include),'exclude/include are not arrays.');
+
+            process.nextTick(function () {
                 socket.emit('watch-project-request-received', 'received');
             });
+
+            exclude = exclude.concat(['**/node_modules/**', '**/*.txt', '**/*.log', '**.git/**', '**.idea/**']);
 
             //TODO: throttle this so that if there are 50+ file changes only 2 requests make it...!!
 
             console.log('watch-project request received!! => data => ', data);
 
-            const projectWatcher = chokidar.watch(global.projectRoot, {
-                ignored: ['**/node_modules/**','**/test/**','**/*.txt', '**/*.log','**.git/**','**.idea/**'],
-                ignore: ['**/node_modules/**','**/test/**','**/*.txt', '**/*.log','**.git/**','**.idea/**'],
+            const projectWatcher = chokidar.watch(include[0], {
+                ignored: exclude,
+                ignore: exclude,
                 ignoreInitial: true
             });
 
@@ -286,41 +307,89 @@ module.exports = function (server) {
                 console.log(' => Suman server => watched paths:', watched);
             });
 
+
+            var to, child;
+
             projectWatcher.on('change', function (p) {
 
                 p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //for Webstorm support
 
                 console.log(`File ${p} has been changed`);
 
-                fs.writeFileSync(projectWatcherOutputLogPath,  //'w' flag truncates the file, the only time the file is truncated
-                    '\n\n => Suman watcher => file changed:\n' + p, {
-                        flags: 'w',
-                        flag: 'w'
+                clearTimeout(to);
+
+                //throttle the code, any requests that come within a half second of each other, only last one gets through
+                to = setTimeout(function () {
+                    run();
+                }, 500);
+
+                function run() {
+
+                    fs.writeFileSync(projectWatcherOutputLogPath,
+                        //'w' flag truncates the file, the only time the file is truncated
+                        '\n\n => Suman watcher => file changed:\n' + p, {
+                            flags: 'w',
+                            flag: 'w'
+                        });
+
+
+                    const stderr = fs.createWriteStream(projectWatcherOutputLogPath);
+                    const stdout = fs.createWriteStream(projectWatcherOutputLogPath);
+
+                    // async.parallel([
+                    //     function (cb) {
+                    //         stderr.once('ready', cb);
+                    //     },
+                    //     function (cb) {
+                    //         stdout.once('ready', cb);
+                    //     }
+                    // ], function (err) {
+                    //
+                    //     if (err) {
+                    //         console.error(err.stack || err);
+                    //         return;
+                    //     }
+
+                    console.log(' => Stdout/stderr streams open/ready, now spawing child process...');
+
+                    if (child) {
+                        child.kill();
+                    }
+
+                    child = cp.spawn(executable, execStringArray, {
+                        env: Object.assign({}, process.env, {
+                            SUMAN_DEBUG: 'ys'
+                        }),
+                        // stdio: [
+                        //     null,
+                        //     stdout,
+                        //     stderr
+                        // ]
                     });
 
-                const ls = cp.spawn(sumanExecutablePath, ['test/test-src'], {
-                    env: Object.assign({}, process.env, {
-                        SUMAN_DEBUG: 'yes'
-                    })
-                });
+                    child.stdout.setEncoding('utf8');
+                    child.stderr.setEncoding('utf8');
 
-                ls.stdout.setEncoding('utf8');
-                ls.stderr.setEncoding('utf8');
+                    // ls.stdout.on('data', function (d) {
+                    //     console.log(d);
+                    // });
+                    //
+                    // ls.stderr.on('data', function (d) {
+                    //     console.log(d);
+                    // });
 
-                // ls.stdout.on('data', function (d) {
-                //     console.log(d);
-                // });
-                //
-                // ls.stderr.on('data', function (d) {
-                //     console.log(d);
-                // });
+                    child.stdout.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
+                    child.stderr.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
 
-                ls.stdout.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
-                ls.stderr.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
+                    child.on('close', function () {
+                        console.log(' => Suman server => project-watcher child process has fired "close" event.');
+                    });
 
-                ls.on('close', function () {
-                    console.log('child process has "close" event.');
-                });
+
+                    // })
+
+                }
+
 
             });
 
