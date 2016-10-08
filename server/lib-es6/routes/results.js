@@ -124,7 +124,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/done/:runId', function (req, res, next) {
 
-    var data = body.data;
+    var data = req.body.data;
 
     try {
         var json = JSON.stringify(data.test);

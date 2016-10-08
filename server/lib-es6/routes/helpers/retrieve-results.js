@@ -11,9 +11,6 @@ var du = require('du');
 var config = global.sumanConfig;
 
 
-
-
-
 // module.exports = function (req, res) {
 //
 //     var helpers = require('./index');

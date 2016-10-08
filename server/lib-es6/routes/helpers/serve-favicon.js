@@ -12,9 +12,7 @@ var path = require('path');
 module.exports = function(req,res){
 
     var helpers = require('./index');
-
     var fsPath = req.sumanData.fsPath;
-
     console.log('fsPath:', fsPath);
 
     helpers.serveFile(req,res);

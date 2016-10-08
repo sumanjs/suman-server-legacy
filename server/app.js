@@ -2,18 +2,18 @@
  * Created by denman on 11/30/15.
  */
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var url = require('url');
-var _ = require('underscore');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const url = require('url');
+const _ = require('underscore');
 const domain = require('domain');
 
 //create express app
-var app = express();
+const app = express();
 
 //disable etags
 app.disable('etag');
@@ -50,9 +50,9 @@ app.use(function (req, res, next) {
     const d = domain.create();
 
     d.once('error', function (err) {
-        console.error(err.stack);
+        console.error(err.stack || err);
         res.json({
-            error: err.stack
+            error: err.stack || err
         })
     });
 
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
 
 function onEnd(msg) {
     console.log('res has emitted end event, message:', msg);
-    var error = new Error('Not real error');
+    const error = new Error('Not real error');
     console.log(error.stack);
 }
 
@@ -74,7 +74,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (req, res, next) {
-    var requestUrl = req.parsedRequestUrl = url.parse(req.url);
+    req.parsedRequestUrl = url.parse(req.url);
     req.sumanData = {};
     next();
 });
@@ -98,7 +98,7 @@ app.use(function (req, res, next) {
 
 
 app.use(function (req, res, next) {
-    var err = new Error('Not Found - ' + req.originalUrl);
+    const err = new Error('Not Found - ' + req.originalUrl);
     err.status = 404;
     next(err);
 });

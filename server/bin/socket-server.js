@@ -71,25 +71,26 @@ function createPool() {
 ///////////////////////////////////////////////////
 
 const opts = {
+    ignore: ['**/*.txt', '**/*.log'],
     ignored: ['**/*.txt', '**/*.log'],
     ignoreInitial: true
     // ignored: /(\.txt|\.log)$/
 };
 
-var sumanExec;
-
-try {
-    sumanExec = require.resolve('suman');
-    const temp = String(sumanExec).split(path.sep);
-    temp.pop();
-    temp.pop();
-    temp.push('index.js');
-    sumanExec = 'node ' + path.resolve(temp.join(path.sep));
-}
-catch (err) {
-    console.log('\n\n\t => Warning Suman main executable file could not be located, attempting "$ suman"...');
-    sumanExec = 'suman ';
-}
+// var sumanExec;
+//
+// try {
+//     sumanExec = require.resolve('suman');
+//     const temp = String(sumanExec).split(path.sep);
+//     temp.pop();
+//     temp.pop();
+//     temp.push('index.js');
+//     sumanExec = 'node ' + path.resolve(temp.join(path.sep));
+// }
+// catch (err) {
+//     console.log('\n\n\t => Warning Suman main executable file could not be located, attempting "$ suman"...');
+//     sumanExec = 'suman ';
+// }
 
 function initiateTranspileAction(p, opts, executeTest) {
 

@@ -2,7 +2,7 @@ var globalErr;
 
 process.on('exit', function (code) {
   if (globalErr) {
-    console.error('\n\n => Suman Server => Uncaught Exception => ' + globalErr.stack + '\n\n');
+    console.error('\n\n => Suman Server => Uncaught Exception => ' + (globalErr.stack || globalErr) + '\n\n');
   }
   console.log('\n => Suman server exiting with code => ', code, '\n');
 });
@@ -43,24 +43,6 @@ const colors = require('colors');
 
 //////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////
-
-//config
-// var config = require('adore')(module, '*suman*', 'server/config/conf');
-
-// var configPath, sumanConfig = null;
-//
-// try {
-//     configPath = path.resolve(root + '/suman.conf.js');
-//     sumanConfig = require(configPath);
-//     console.log(colors.cyan(' => Suman Server message => using config at path => ' + configPath));
-// }
-// catch (err) {
-//     console.log(colors.yellow(' => Suman Server warning => Could not find a suman.conf.js config file in the root of your project. Using default config.'));
-//     configPath = path.resolve(__dirname + '/../../default-conf-files/suman.default.conf.js');
-//     sumanConfig = require(configPath);
-// }
-
 const root = global.projectRoot = process.env.SUMAN_PROJECT_ROOT;
 const sumanConfig = global.sumanConfig = JSON.parse(process.env.SUMAN_CONFIG);
 const sumanExecutablePath = global.sumanExecutablePath = process.env.SUMAN_EXECUTABLE_PATH;
@@ -91,7 +73,7 @@ opts.vverbose = sumanCombinedOpts.vverbose;
 
 /////////////////////////////////////////////////////////////////////////
 
-console.log('Suman server starting up...');
+console.log(' => Suman server starting up...');
 
 const app = require('../app');
 app.set('port', process.env.PORT || '6969');
