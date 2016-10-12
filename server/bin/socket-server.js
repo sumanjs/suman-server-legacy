@@ -334,8 +334,8 @@ module.exports = function (server) {
                         });
 
 
-                    const stderr = fs.createWriteStream(projectWatcherOutputLogPath);
-                    const stdout = fs.createWriteStream(projectWatcherOutputLogPath);
+                    // const stderr = fs.createWriteStream(projectWatcherOutputLogPath);
+                    // const stdout = fs.createWriteStream(projectWatcherOutputLogPath);
 
                     // async.parallel([
                     //     function (cb) {
