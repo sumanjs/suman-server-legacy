@@ -37,8 +37,25 @@ const sumanExecutablePath = path.resolve(global.projectRoot, 'node_modules/.bin/
 const watcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/watcher-output.log');
 const projectWatcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/project-watcher-output.log');
 
+
 console.log('global.sumanHelperDirRoot:', global.sumanHelperDirRoot);
 console.log('watcherOutputLogPath:', watcherOutputLogPath);
+
+
+fs.writeFileSync(watcherOutputLogPath,
+    //'w' flag truncates the file, the only time the file is truncated
+    '\n\n => Suman server will write to this log file when any of your test files change.\n\n', {
+        flags: 'w',
+        flag: 'w'
+    });
+
+fs.writeFileSync(projectWatcherOutputLogPath,
+    //'w' flag truncates the file, the only time the file is truncated
+    '\n\n => Suman server will write to this log when any of your project files change.\n\n', {
+        flags: 'w',
+        flag: 'w'
+    });
+
 
 function getStream() {
     return fs.createWriteStream(watcherOutputLogPath, {
@@ -48,7 +65,7 @@ function getStream() {
 }
 
 //TODO: if stdout and stderr share the same writable stream maybe their output will be in the right order?
-const workerPath = path.resolve('./suman-watch-worker.js');
+const workerPath = require.resolve('./suman-watch-worker.js');
 
 var pool;
 
@@ -220,7 +237,7 @@ function runTestWithSuman($tests) {
 
     logMessageToWatcherLog('\n => Suman watcher => test will now execute.\n\n');
 
-    if (process.env.SUMAN_DEBUG === 'yes') {
+    if (process.env.SUMAN_DEBUG === 'yes' || true) {
         logMessageToWatcherLog('\n => pool size => ' + JSON.stringify(pool.getCurrentSize()) + '\n');
     }
 
@@ -228,7 +245,7 @@ function runTestWithSuman($tests) {
     //currently running tests and writing to the watcher-output.log file
     pool.killAllActiveWorkers();
 
-    console.log('All active poolio workers killed.');
+    console.log('All active poolio workers killed, pool stats:', pool.getCurrentSize());
 
     const promises = tests.map(function (t) {
         const item = pathHash[t];
@@ -269,11 +286,10 @@ module.exports = function (server) {
 
         socket.on('watch-project', function (data) {
 
-
             try {
                 data = JSON.parse(data);
             }
-            catch(err){
+            catch (err) {
 
             }
 
@@ -284,7 +300,7 @@ module.exports = function (server) {
             const execStringArray = String(script).split(/\s+/);
             const executable = execStringArray.shift();
 
-            assert(Array.isArray(exclude) && Array.isArray(include),'exclude/include are not arrays.');
+            assert(Array.isArray(exclude) && Array.isArray(include), 'exclude/include are not arrays.');
 
             process.nextTick(function () {
                 socket.emit('watch-project-request-received', 'received');
@@ -296,7 +312,9 @@ module.exports = function (server) {
 
             console.log('watch-project request received!! => data => ', data);
 
-            const projectWatcher = chokidar.watch(include[0], {
+            // used to be include[0]
+
+            const projectWatcher = chokidar.watch(include, {
                 ignored: exclude,
                 ignore: exclude,
                 ignoreInitial: true
@@ -379,8 +397,9 @@ module.exports = function (server) {
                     //     console.log(d);
                     // });
 
-                    child.stdout.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
-                    child.stderr.pipe(fs.createWriteStream(projectWatcherOutputLogPath));
+                    const strm = fs.createWriteStream(projectWatcherOutputLogPath);
+                    child.stdout.pipe(strm);
+                    child.stderr.pipe(strm);
 
                     child.on('close', function () {
                         console.log(' => Suman server => project-watcher child process has fired "close" event.');

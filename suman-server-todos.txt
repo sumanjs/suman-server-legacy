@@ -1,0 +1,17 @@
+
+ ////////////////////////////////////////////
+
+ this happens when running in SUMAN_SINGLE_PROCESS mode
+
+ => Suman server => project-watcher child process has fired "close" event.
+TypeError: Cannot read property 'desc' of null
+    at /Users/t_millal/WebstormProjects/oresoftware/suman-server/server/lib-es5/routes/results.js:371:72
+    at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:445:3)
+
+
+ => Suman Server => Uncaught Exception => TypeError: Cannot read property 'desc' of null
+    at /Users/t_millal/WebstormProjects/oresoftware/suman-server/server/lib-es5/routes/results.js:371:72
+    at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:445:3)
+
+
+    //////////////////////////////////////

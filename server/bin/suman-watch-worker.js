@@ -2,19 +2,19 @@
 
 process.on('uncaughtException', function (e) {
 	if (process.env.SUMAN_DEBUG === 'yes' || true) {
-		console.error('\n', ' => Suman watcher process uncaughtException:', e.stack || e, '\n');
+		console.log('\n', ' => Suman watcher process uncaughtException:', e.stack || e, '\n');
 	}
 });
 
 process.on('error', function (e) {
 	if (process.env.SUMAN_DEBUG === 'yes' || true) {
-		console.error('\n', ' => Suman watcher process error event:', e.stack || e, '\n');
+		console.log('\n', ' => Suman watcher process error event:', e.stack || e, '\n');
 	}
 });
 
 process.on('unhandledRejection', function (e) {
 	if (process.env.SUMAN_DEBUG === 'yes' || true) {
-		console.error('\n', ' => Suman watcher process unhandledRejection event:', e.stack || e, '\n');
+		console.log('\n', ' => Suman watcher process unhandledRejection event:', e.stack || e, '\n');
 	}
 });
 
