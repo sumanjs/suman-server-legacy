@@ -76,8 +76,9 @@ function createPool() {
             addWorkerOnExit: true,
             silent: true,
             filePath: workerPath,
-            stdout: getStream,
-            stderr: getStream
+            getSharedWritableStream: getStream,
+            // stdout: getStream,
+            // stderr: getStream
             // env: _.extend(process.env, {
             // 	SUMAN_WATCH: 'yes'
             // })
@@ -237,7 +238,7 @@ function runTestWithSuman($tests) {
 
     logMessageToWatcherLog('\n => Suman watcher => test will now execute.\n\n');
 
-    if (process.env.SUMAN_DEBUG === 'yes' || true) {
+    if (process.env.SUMAN_DEBUG === 'yes') {
         logMessageToWatcherLog('\n => pool size => ' + JSON.stringify(pool.getCurrentSize()) + '\n');
     }
 

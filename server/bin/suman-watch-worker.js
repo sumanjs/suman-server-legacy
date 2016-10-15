@@ -1,7 +1,8 @@
 'use strict';
 
 process.on('uncaughtException', function (e) {
-	if (process.env.SUMAN_DEBUG === 'yes' || true) {
+	const count = process.listenerCount('uncaughtException');
+	if (process.env.SUMAN_DEBUG === 'yes' || count < 2) {
 		console.log('\n', ' => Suman watcher process uncaughtException:', e.stack || e, '\n');
 	}
 });
