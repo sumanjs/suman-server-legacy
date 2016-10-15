@@ -1,6 +1,6 @@
 {
   "name": "suman-server",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "Server/DB/watcher for Suman test runner",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "express": "^4.14.0",
     "jquery": "^2.2.2",
     "lodash": "^4.6.1",
+    "merge-descriptors": "^1.0.1",
     "morgan": "^1.6.1",
     "poolio": "^0.2.3",
     "react": "^0.14.8",
@@ -44,7 +45,7 @@
     "siamese": "^2.0.4",
     "socket.io": "^1.4.5",
     "socket.io-client": "^1.4.3",
-    "suman-utils": "0.0.2",
+    "suman-utils": "0.0.4",
     "tcp-ping": "^0.1.1",
     "underscore": "^1.8.3",
     "v8flags": "^2.0.10"
