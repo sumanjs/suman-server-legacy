@@ -98,41 +98,46 @@ const opts = {
 
 function initiateTranspileAction(p, opts, executeTest) {
 
-    const items = _.flatten([p]);
+    const items = _.flattenDeep([p]);
 
     const transpileThese = items.filter(function (p) {
         return pathHash[p].transpile;
     });
 
-    if (transpileThese.length < 1) {
-        runTestWithSuman(items);
-    }
-    else {
+    const doNotTranspileThese = items.filter(function (p) {
+        return !pathHash[p].transpile;
+    });
 
-        logMessageToWatcherLog('\n\n => file will first be transpiled/copied.');
+    process.nextTick(function () {
+        logMessageToWatcherLog('\n\n => the following files apparently do not need transpilation and will ' +
+            'be run directly => \n' + doNotTranspileThese);
+        runTestWithSuman(doNotTranspileThese);
+    });
 
-        runTranspile(transpileThese, (opts || {}), function (err, results) {
-            if (err) {
-                console.log(' => transpile error:', util.inspect(err.stack || err));
-                logMessageToWatcherLog('\n\n => Suman server => file transpilation error => \n' + util.inspect(err.stack || err));
+    logMessageToWatcherLog('\n\n => the following files will first be transpiled/copied => \n' + transpileThese);
+
+    runTranspile(transpileThese, (opts || {}), function (err, results) {
+        if (err) {
+            console.log(' => transpile error:', util.inspect(err.stack || err));
+            logMessageToWatcherLog('\n\n => Suman server => file transpilation error => \n' + util.inspect(err.stack || err));
+        }
+        else {
+            console.log(' => transpile results:', results);
+            logMessageToWatcherLog('\n => file transpiled successfully.');
+
+            if (executeTest) {
+                //TODO: not all of these should be executed
+                runTestWithSuman(results.map(item => {
+                    console.log(' => Suman server item to be run after transpilation:', util.inspect(item));
+                    const hashItem = pathHash[item.originalPath];
+                    console.log(' => Suman server going to add testTarget property to the following item:', util.inspect(hashItem));
+                    hashItem.targetPath = item.targetPath;
+                    return item.originalPath;
+                }));
             }
-            else {
-                console.log(' => transpile results:', results);
-                logMessageToWatcherLog('\n => file transpiled successfully.');
+        }
+    });
 
-                if (executeTest) {
-                    //TODO: not all of these should be executed
-                    runTestWithSuman(results.map(item => {
-                        console.log(' => Suman server item to be run after transpilation:', util.inspect(item));
-                        const hashItem = pathHash[item.originalPath];
-                        console.log(' => Suman server going to add testTarget property to the following item:', util.inspect(hashItem));
-                        hashItem.targetPath = item.targetPath;
-                        return item.originalPath;
-                    }));
-                }
-            }
-        });
-    }
 }
 
 const match = global.sumanMatches.map(item => (item instanceof RegExp) ? item : new RegExp(item));
