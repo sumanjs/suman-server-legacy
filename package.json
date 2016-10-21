@@ -1,6 +1,6 @@
 {
   "name": "suman-server",
-  "version": "0.0.20",
+  "version": "0.0.201",
   "description": "Server/DB/watcher for Suman test runner",
   "main": "index.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "siamese": "^2.0.4",
     "socket.io": "^1.4.5",
     "socket.io-client": "^1.4.3",
-    "suman-utils": "0.0.4",
+    "suman-utils": "0.0.7301",
     "tcp-ping": "^0.1.1",
     "underscore": "^1.8.3",
     "v8flags": "^2.0.10"
