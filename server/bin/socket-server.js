@@ -95,20 +95,6 @@ const opts = {
     // ignored: /(\.txt|\.log)$/
 };
 
-// var sumanExec;
-//
-// try {
-//     sumanExec = require.resolve('suman');
-//     const temp = String(sumanExec).split(path.sep);
-//     temp.pop();
-//     temp.pop();
-//     temp.push('index.js');
-//     sumanExec = 'node ' + path.resolve(temp.join(path.sep));
-// }
-// catch (err) {
-//     console.log('\n\n\t => Warning Suman main executable file could not be located, attempting "$ suman"...');
-//     sumanExec = 'suman ';
-// }
 
 function initiateTranspileAction(p, opts, executeTest) {
 
@@ -127,8 +113,8 @@ function initiateTranspileAction(p, opts, executeTest) {
 
         runTranspile(transpileThese, (opts || {}), function (err, results) {
             if (err) {
-                console.log('transpile error:', err);
-                logMessageToWatcherLog('\n\n => Suman server => file transpilation error => \n' + err.stack);
+                console.log(' => transpile error:', util.inspect(err.stack || err));
+                logMessageToWatcherLog('\n\n => Suman server => file transpilation error => \n' + util.inspect(err.stack || err));
             }
             else {
                 console.log(' => transpile results:', results);
@@ -158,7 +144,7 @@ if (process.env.SUMAN_DEBUG === 'yes') {
 }
 
 function matchesInput(filename) {
-    return match.every(function (regex) {
+    return !match.every(function (regex) {
         return !String(filename).match(regex);
     });
 }
@@ -210,9 +196,15 @@ function runTestWithSuman($tests) {
 
         if (!condition) {
             logExtraMsg = true;
-            const msg = ' => Suman server message => the following file changed and may have been transpiled,\n' +
-                '\t but it did not match the regular expressions necessary to run the test =>\n\t => ' + originalTestPath;
-
+            //TODO: if it doesn't match regex it shouldn't get transpiled either?
+            const msg = ' => Suman server message => the following file changed =>\n' + originalTestPath
+                + '\n and may have been transpiled,\n' +
+                '\t but it did not match the regular expressions necessary to run the test =>\n' +
+                '\t => the filepath must match one of' + match +
+                '\n and must not match any of => ' + notMatch + '\n matches positive input = ' + _matchesInput +
+                '\n does not match any negative input ' + _doesNotMatch;
+            logMessageToWatcherLog(msg);
+            console.log(msg);
         }
         return condition;
 
@@ -353,23 +345,6 @@ module.exports = function (server) {
                         });
 
 
-                    // const stderr = fs.createWriteStream(projectWatcherOutputLogPath);
-                    // const stdout = fs.createWriteStream(projectWatcherOutputLogPath);
-
-                    // async.parallel([
-                    //     function (cb) {
-                    //         stderr.once('ready', cb);
-                    //     },
-                    //     function (cb) {
-                    //         stdout.once('ready', cb);
-                    //     }
-                    // ], function (err) {
-                    //
-                    //     if (err) {
-                    //         console.error(err.stack || err);
-                    //         return;
-                    //     }
-
                     console.log(' => Stdout/stderr streams open/ready, now spawing child process...');
 
                     if (child) {
@@ -466,8 +441,11 @@ module.exports = function (server) {
             console.log(' => Suman server event => socket.io watch event has been received by server:\n', msg);
 
             if (watcher) {
-                console.log('\n\n => Watched paths before:', watcher.getWatched());
-                watcher.add(paths);
+                console.log('\n\n => Watcher exists => Watched paths before:', watcher.getWatched());
+                paths.forEach(function (p) {
+                    console.log(' => Suman server => watcher is adding path =>', p);
+                    watcher.add(p);
+                });
                 console.log('\n\n => Watched paths after:', watcher.getWatched());
             }
             else {
@@ -479,6 +457,8 @@ module.exports = function (server) {
                     console.log(`File ${p} has been added`);
                     initiateTranspileAction(p);
                 });
+
+                watcher.on('addDir', path => console.log(`Directory ${path} has been added`));
 
                 watcher.on('change', p => {
 
