@@ -506,7 +506,8 @@ module.exports = function (server) {
                     console.log('\n\n', ' => Suman server => pathHash:', util.inspect(pathHash), '\n\n');
                 }
 
-                setTimeout(updatePathHash, 1000);
+                setTimeout(updatePathHash, 700);
+                setTimeout(updatePathHash, 1200);
                 setTimeout(updatePathHash, 2000);
                 setTimeout(updatePathHash, 4000);
 
