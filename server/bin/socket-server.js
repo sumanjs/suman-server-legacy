@@ -109,9 +109,15 @@ function initiateTranspileAction(p, opts, executeTest) {
     });
 
     process.nextTick(function () {
-        logMessageToWatcherLog('\n\n => the following files apparently do not need transpilation and will ' +
-            'be run directly => \n' + doNotTranspileThese);
-        runTestWithSuman(doNotTranspileThese);
+
+        if (doNotTranspileThese.length > 0) { //explicit for your pleasure
+
+            logMessageToWatcherLog('\n\n => the following files apparently do not need transpilation and will ' +
+                'be run directly => \n' + doNotTranspileThese);
+
+            runTestWithSuman(doNotTranspileThese);
+        }
+
     });
 
     logMessageToWatcherLog('\n\n => the following files will first be transpiled/copied => \n' + transpileThese);
@@ -122,10 +128,11 @@ function initiateTranspileAction(p, opts, executeTest) {
             logMessageToWatcherLog('\n\n => Suman server => file transpilation error => \n' + util.inspect(err.stack || err));
         }
         else {
-            console.log(' => transpile results:', results);
-            logMessageToWatcherLog('\n => file transpiled successfully.');
+            console.log('\n\n', ' => transpile results:', util.inspect(results), '\n');
+            logMessageToWatcherLog('\n\n => file(s) transpiled successfully =>', util.inspect(results));
 
             if (executeTest) {
+
                 //TODO: not all of these should be executed
                 runTestWithSuman(results.map(item => {
                     console.log(' => Suman server item to be run after transpilation:', util.inspect(item));
@@ -140,25 +147,29 @@ function initiateTranspileAction(p, opts, executeTest) {
 
 }
 
-const match = global.sumanMatches.map(item => (item instanceof RegExp) ? item : new RegExp(item));
-const notMatch = global.sumanNotMatches.map(item => (item instanceof RegExp) ? item : new RegExp(item));
-
 if (process.env.SUMAN_DEBUG === 'yes') {
     console.log('sumanMatches:', match);
     console.log('sumanNotMatches:', notMatch);
 }
 
-function matchesInput(filename) {
-    return !match.every(function (regex) {
+function doesMatchAll(filename) {
+    return global.sumanMatchesAll.every(function (regex) {
+        return String(filename).match(regex);
+    });
+}
+
+function doesMatchAny(filename) {
+    return !global.sumanMatchesAny.every(function (regex) {
         return !String(filename).match(regex);
     });
 }
 
-function doesNotMatchNegativeMatchInput(filename) {
-    return notMatch.every(function (regex) {
+function doesMatchNone(filename) {
+    return global.sumanMatchesNone.every(function (regex) {
         return !String(filename).match(regex);
     });
 }
+
 
 function logMessageToWatcherLog(msg) {
     console.log(msg);
@@ -173,10 +184,19 @@ function runTestWithSuman($tests) {
 
     var logExtraMsg = false;
 
-    const tests = _.flatten([$tests]).filter(function (originalTestPath) {
+    console.log('$tests =>', util.inspect($tests));
+
+    const flattenedTests = _.flattenDeep([$tests]);
+
+    if (flattenedTests.length < 1) {
+        console.log(new Error(' => Warning empty set of tests pass to runTestWithSuman().').stack, ' => tests => ',flattenedTests, '\n');
+        return;
+    }
+
+    const filteredTests = flattenedTests.filter(function (originalTestPath) {
 
         console.log('originalTestPath:', originalTestPath);
-        console.log('pathHash:', JSON.stringify(pathHash));
+        console.log('pathHash:', util.inspect(pathHash));
 
         const valFromHash = pathHash[originalTestPath];
 
@@ -188,16 +208,18 @@ function runTestWithSuman($tests) {
         if (!valFromHash.execute) {
             return false;
         }
-        const _matchesInput = matchesInput(originalTestPath);
-        const _doesNotMatch = doesNotMatchNegativeMatchInput(originalTestPath);
+        const _matchesInput = doesMatchAny(originalTestPath);
+        const _doesNotMatch = doesMatchNone(originalTestPath);
+        const _doesMatchAll = doesMatchAll(originalTestPath);
 
         if (process.env.SUMAN_DEBUG === 'yes') {
-            console.log('item:', originalTestPath);
-            console.log('_matchesInput:', _matchesInput);
-            console.log('_doesNotMatch:', _doesNotMatch);
+            console.log(' => item:', originalTestPath);
+            console.log(' => matchesAny:', _matchesInput);
+            console.log(' => matchesNone:', _doesNotMatch);
+            console.log(' => matchesAll:', _doesMatchAll);
         }
 
-        const condition = _matchesInput && _doesNotMatch;
+        const condition = _matchesInput && _doesNotMatch && _doesMatchAll;
 
         if (!condition) {
             logExtraMsg = true;
@@ -205,8 +227,8 @@ function runTestWithSuman($tests) {
             const msg = ' => Suman server message => the following file changed =>\n' + originalTestPath
                 + '\n and may have been transpiled,\n' +
                 '\t but it did not match the regular expressions necessary to run the test =>\n' +
-                '\t => the filepath must match one of' + match +
-                '\n and must not match any of => ' + notMatch + '\n matches positive input = ' + _matchesInput +
+                '\t => the filepath must match one of' + util.inspect(global.sumanMatchesAny) +
+                '\n and must not match any of => ' + util.inspect(global.sumanMatchesNone) + '\n matches positive input = ' + _matchesInput +
                 '\n does not match any negative input ' + _doesNotMatch;
             logMessageToWatcherLog(msg);
             console.log(msg);
@@ -217,12 +239,12 @@ function runTestWithSuman($tests) {
 
     if (logExtraMsg) {
         const msg1 = ' => Regexes that effect the execution of a test:\n' +
-            'positive matches: ' + global.sumanMatches + '\n' +
-            'negative matches: ' + global.sumanNotMatches;
+            'positive matches: ' + global.sumanMatchesAny + '\n' +
+            'negative matches: ' + global.sumanMatchesNone;
         logMessageToWatcherLog(msg1);
     }
 
-    if (tests.length < 1) {
+    if (filteredTests.length < 1) {
         const msg2 = ' => Suman watcher => No test files matched regexes, nothing to run. We are done here.';
         console.log(msg2);
         logMessageToWatcherLog(msg2);
@@ -245,7 +267,7 @@ function runTestWithSuman($tests) {
 
     console.log('All active poolio workers killed, pool stats:', pool.getCurrentSize());
 
-    const promises = tests.map(function (t) {
+    const promises = filteredTests.map(function (t) {
         const item = pathHash[t];
         const p = item.transpile ? item.targetPath : item.testPath;
         return pool.any({
@@ -319,7 +341,7 @@ module.exports = function (server) {
             });
 
             projectWatcher.once('ready', () => {
-                console.log(' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
+                console.log('\n\n', ' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
                 const watched = projectWatcher.getWatched();
                 console.log(' => Suman server => watched paths:', watched);
             });
@@ -429,6 +451,9 @@ module.exports = function (server) {
 
         });
 
+
+
+
         socket.on('watch', function ($msg) {
 
             console.log(' => Suman server => "watch" request received via socket.io.');
@@ -443,7 +468,25 @@ module.exports = function (server) {
 
             const transpile = msg.transpile || false;
 
-            console.log(' => Suman server event => socket.io watch event has been received by server:\n', msg);
+            function setWatched(watched){
+                (function (w) {
+                    Object.keys(w).forEach(function (key) {
+                        const array = w[key];
+                        array.forEach(function (p) {
+                            const temp = String(path.resolve(key + '/' + p)).replace('___jb_tmp___', '').replace('___jb_old___', '');
+                            console.log(' => The following file path is being saved as { transpile:', transpile, '} =>', temp);
+                            pathHash[temp] = {
+                                transpile: transpile,
+                                testPath: temp,
+                                execute: true
+                            }
+                        });
+
+                    });
+                })(watched);
+            }
+
+            console.log('\n', ' => Suman server event => socket.io watch event has been received by server:\n', msg, '\n');
 
             if (watcher) {
                 console.log('\n\n => Watcher exists => Watched paths before:', watcher.getWatched());
@@ -451,11 +494,27 @@ module.exports = function (server) {
                     console.log(' => Suman server => watcher is adding path =>', p);
                     watcher.add(p);
                 });
-                console.log('\n\n => Watched paths after:', watcher.getWatched());
+
+
+                function updatePathHash() {
+                    //TODO: this needs an upgrade => setWatched() call is needed
+                    if (watcher) { //TODO: what if watcher is closed?
+                        const watched = watcher.getWatched();
+                        console.log('\n\n', ' => Suman server => watched paths:', watched, '\n\n');
+                        setWatched(watched);
+                    }
+                    console.log('\n\n', ' => Suman server => pathHash:', util.inspect(pathHash), '\n\n');
+                }
+
+                setTimeout(updatePathHash, 1000);
+                setTimeout(updatePathHash, 2000);
+                setTimeout(updatePathHash, 4000);
+
             }
             else {
-                console.log(' => Suman server => chokidar watcher initialized.');
+                console.log('\n', ' => Suman server => chokidar watcher initialized.', '\n');
                 watcher = chokidar.watch(paths, opts);
+
 
                 watcher.on('add', p => {
                     p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //JetBrains support
@@ -463,7 +522,6 @@ module.exports = function (server) {
                     initiateTranspileAction(p);
                 });
 
-                watcher.on('addDir', path => console.log(`Directory ${path} has been added`));
 
                 watcher.on('change', p => {
 
@@ -471,10 +529,10 @@ module.exports = function (server) {
 
                     p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //for Webstorm support
 
-                    console.log(pathHash[String(p)]);
+                    console.log(util.inspect(pathHash[String(p)]));
 
                     if (!pathHash[p]) {
-                        console.log(' => Suman server warning => the following file path was not already stored in the pathHash:', p);
+                        console.error(' => Suman server warning => the following file path was not already stored in the pathHash:', p);
                     }
 
                     fs.writeFileSync(watcherOutputLogPath,  //'w' flag truncates the file, the only time the file is truncated
@@ -484,11 +542,11 @@ module.exports = function (server) {
                         });
 
                     if (pathHash[p] && pathHash[p].transpile) {
-                        console.log('transpiling!');
+                        console.log(` =>  transpiling file => ${p}`);
                         initiateTranspileAction(p, null, true);
                     }
                     else {
-                        console.log('running (without transpile)!!');
+                        console.log(` =>  now running file without transpile => ${p}`);
                         runTestWithSuman(p);
                     }
                 });
@@ -512,27 +570,12 @@ module.exports = function (server) {
                     console.log(`chokidar watcher error: ${error}`)
                 });
 
+
                 watcher.on('ready', () => {
-                    console.log(' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
+                    console.log('\n\n', ' => Suman server => Suman watch process => Initial scan complete. Ready for changes');
                     const watched = watcher.getWatched();
-                    console.log(' => Suman server => watched paths:', watched);
-
-                    (function (w) {
-                        Object.keys(w).forEach(function (key) {
-                            const array = w[key];
-                            array.forEach(function (p) {
-                                const temp = String(path.resolve(key + '/' + p)).replace('___jb_tmp___', '').replace('___jb_old___', '');
-                                console.log(' => The following file path is being saved as { transpile:', transpile, '} =>', temp);
-                                pathHash[temp] = {
-                                    transpile: transpile,
-                                    testPath: temp,
-                                    execute: true
-                                }
-                            });
-
-                        });
-                    })(watched);
-
+                    console.log('\n\n', ' => Suman server => watched paths:', watched, '\n\n');
+                    setWatched(watched);
                 });
 
                 watcher.on('raw', (event, p, details) => {

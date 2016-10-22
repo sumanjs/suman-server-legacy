@@ -56,8 +56,9 @@ console.log(sumanLogos.suman_alligator);
 
 const sumanServerOpts = process.env.SUMAN_SERVER_OPTS;
 const sumanCombinedOpts = global.sumanCombinedOpts = sumanServerOpts ? JSON.parse(sumanServerOpts) : {
-    sumanMatches: sumanConfig.match,
-    sumanNotMatches: sumanConfig.notMatch,
+    sumanMatchesAny: sumanConfig.matchAny,
+    sumanMatchesNone: sumanConfig.matchNone,
+    sumanMatchesAll: sumanConfig.matchAll,
     sumanHelperDirRoot: sumanConfig.sumanHelpersDir,
     verbose: true,
     vverbose: true
@@ -66,6 +67,10 @@ const sumanCombinedOpts = global.sumanCombinedOpts = sumanServerOpts ? JSON.pars
 Object.keys(sumanCombinedOpts).forEach(opt => {
     global[opt] = sumanCombinedOpts[opt];
 });
+
+global.sumanMatchesAny = global.sumanMatchesAny.map(i => new RegExp(i));
+global.sumanMatchesNone = global.sumanMatchesNone.map(i => new RegExp(i));
+global.sumanMatchesAll = global.sumanMatchesAll.map(i => new RegExp(i));
 
 const opts = global.sumanOpts = global.sumanOpts || {};
 opts.verbose = sumanCombinedOpts.verbose;
