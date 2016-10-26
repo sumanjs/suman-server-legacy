@@ -1,6 +1,6 @@
 {
   "name": "suman-server",
-  "version": "0.0.203",
+  "version": "0.0.204",
   "description": "Server/DB/watcher for Suman test runner",
   "main": "index.js",
   "scripts": {
@@ -77,7 +77,8 @@
     "requirejs": "^2.2.0",
     "should": "^8.3.1",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^1.13.2"
   },
   "keywords": [
     "Suman",
