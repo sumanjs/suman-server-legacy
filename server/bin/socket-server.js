@@ -37,9 +37,13 @@ const sumanExecutablePath = path.resolve(global.projectRoot, 'node_modules/.bin/
 const watcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/watcher-output.log');
 const projectWatcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/project-watcher-output.log');
 
-
-console.log('global.sumanHelperDirRoot:', global.sumanHelperDirRoot);
-console.log('watcherOutputLogPath:', watcherOutputLogPath);
+if (process.env.SUMAN_DEBUG === 'yes') {
+    console.log('sumanMatchesAll:', global.sumanMatchesAll);
+    console.log('sumanMatchesAny:', global.sumanMatchesAny);
+    console.log('sumanMatchesNone:', global.sumanMatchesNone);
+    console.log('global.sumanHelperDirRoot:', global.sumanHelperDirRoot);
+    console.log('watcherOutputLogPath:', watcherOutputLogPath);
+}
 
 
 fs.writeFileSync(watcherOutputLogPath,
@@ -147,11 +151,6 @@ function initiateTranspileAction(p, opts, executeTest) {
 
 }
 
-if (process.env.SUMAN_DEBUG === 'yes') {
-    console.log('sumanMatchesAll:', global.sumanMatchesAll);
-    console.log('sumanMatchesAny:', global.sumanMatchesAny);
-    console.log('sumanMatchesNone:', global.sumanMatchesNone);
-}
 
 function doesMatchAll(filename) {
     return global.sumanMatchesAll.every(function (regex) {
