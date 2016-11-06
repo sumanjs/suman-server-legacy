@@ -148,8 +148,9 @@ function initiateTranspileAction(p, opts, executeTest) {
 }
 
 if (process.env.SUMAN_DEBUG === 'yes') {
-    console.log('sumanMatches:', match);
-    console.log('sumanNotMatches:', notMatch);
+    console.log('sumanMatchesAll:', global.sumanMatchesAll);
+    console.log('sumanMatchesAny:', global.sumanMatchesAny);
+    console.log('sumanMatchesNone:', global.sumanMatchesNone);
 }
 
 function doesMatchAll(filename) {
@@ -381,24 +382,11 @@ module.exports = function (server) {
                     child = cp.spawn(executable, execStringArray, {
                         env: Object.assign({}, process.env, {
                             SUMAN_DEBUG: 'ys'
-                        }),
-                        // stdio: [
-                        //     null,
-                        //     stdout,
-                        //     stderr
-                        // ]
+                        })
                     });
 
                     child.stdout.setEncoding('utf8');
                     child.stderr.setEncoding('utf8');
-
-                    // ls.stdout.on('data', function (d) {
-                    //     console.log(d);
-                    // });
-                    //
-                    // ls.stderr.on('data', function (d) {
-                    //     console.log(d);
-                    // });
 
                     const strm = fs.createWriteStream(projectWatcherOutputLogPath);
                     child.stdout.pipe(strm);
@@ -453,10 +441,13 @@ module.exports = function (server) {
 
 
 
-
         socket.on('watch', function ($msg) {
 
             console.log(' => Suman server => "watch" request received via socket.io.');
+
+            process.nextTick(function () {
+                socket.emit('watch-request-received', 'received');
+            });
 
             createPool();
 

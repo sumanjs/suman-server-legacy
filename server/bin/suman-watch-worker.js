@@ -19,7 +19,18 @@ process.on('unhandledRejection', function (e) {
 	}
 });
 
+//////////
+
+
 const assert = require('assert');
+
+
+////////////////
+
+process.env.SUMAN_EXTRANEOUS_EXECUTABLE = 'yes';
+
+
+////////////////
 
 process.on('message', function (m) {
 
