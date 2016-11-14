@@ -19,16 +19,16 @@ process.on('unhandledRejection', function (e) {
 	}
 });
 
-//////////
 
-
+//core
 const assert = require('assert');
 
+//npm
 
-////////////////
+
+////project ///////
 
 process.env.SUMAN_EXTRANEOUS_EXECUTABLE = 'yes';
-
 
 ////////////////
 
@@ -64,7 +64,6 @@ process.on('message', function (m) {
 
 	//e.g. => require('/Users/Olegzandr/WebstormProjects/suman/index.js');
 	require(process.env.SUMAN_EXECUTABLE_PATH);
-
 
 
 });
