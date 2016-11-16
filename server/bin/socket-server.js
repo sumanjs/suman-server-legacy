@@ -298,6 +298,22 @@ module.exports = function (server) {
       console.log(' => Socket.io error => ' + err.stack || err);
     });
 
+    var flip = true;
+
+    socket.on('stop-tty', function (message) {
+
+      try {
+        message = JSON.parse(message);
+      }
+      catch (err) {
+
+      }
+
+      flip = false;
+      console.log('stop-tty-received !! => message => ', message);
+      socket.emit('stop-tty-received');
+    });
+
     socket.on('watch-project', function (data) {
 
       try {
@@ -346,7 +362,6 @@ module.exports = function (server) {
 
       // var fd_stdout, fd_stderr;
       var $fd, stderrStrm, stdoutStrm;
-      var flip = true;
       var to, child;
 
       projectWatcher.on('change', function (p) {
@@ -412,7 +427,7 @@ module.exports = function (server) {
             // $fd = fd_stdout = fd_stderr = fs.openSync('/dev/ttys001', 'a');
 
             try {
-              if(flip){
+              if (flip) {
                 $fd = fs.openSync(fd_stdout, 'a');
               }
             }
