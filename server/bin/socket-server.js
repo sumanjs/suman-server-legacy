@@ -16,6 +16,7 @@ const path = require('path');
 const util = require('util');
 const async = require('async');
 const assert = require('assert');
+const tty = require('tty');
 
 //npm
 const socketio = require('socket.io');
@@ -309,6 +310,10 @@ module.exports = function (server) {
       const script = data.script;
       var exclude = data.exclude || [];
       var include = data.include || [];
+      // var fd_stdout = data.fd_stdout;
+      // var fd_stderr = data.fd_stderr;
+
+      console.log('fd_stdout', fd_stdout, 'fd_stderr', fd_stderr);
 
       const execStringArray = String(script).split(/\s+/);
       const executable = execStringArray.shift();
@@ -339,58 +344,98 @@ module.exports = function (server) {
         console.log(' => Suman server => watched paths:', watched);
       });
 
+      var fd_stdout, fd_stderr;
+      var $fd;
       var to, child;
 
       projectWatcher.on('change', function (p) {
 
-        p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //for Webstorm support
+          p = String(p).replace('___jb_tmp___', '').replace('___jb_old___', ''); //for Webstorm support
 
-        console.log(`File ${p} has been changed`);
+          console.log(`File ${p} has been changed`);
 
-        clearTimeout(to);
+          clearTimeout(to);
 
-        //throttle the code, any requests that come within a half second of each other, only last one gets through
-        to = setTimeout(function () {
-          run();
-        }, 500);
+          //throttle the code, any requests that come within a half second of each other, only last one gets through
+          to = setTimeout(function () {
+            run();
+          }, 500);
 
-        function run () {
+          function run () {
 
-          fs.writeFileSync(projectWatcherOutputLogPath,
-            //'w' flag truncates the file, the only time the file is truncated
-            '\n\n => Suman watcher => file changed: "' + p + '"\n\n', {
-              flags: 'w',
-              flag: 'w'
+            fs.writeFileSync(projectWatcherOutputLogPath,
+              //'w' flag truncates the file, the only time the file is truncated
+              '\n\n => Suman watcher => file changed: "' + p + '"\n\n', {
+                flags: 'w',
+                flag: 'w'
+              });
+
+            console.log(' => Stdout/stderr streams open/ready, now spawing child process...');
+
+            if (child) {
+              try {
+                child.kill();
+              }
+              catch (err) {
+                console.error(err.stack || err);
+              }
+            }
+
+            if ($fd) {
+              try {
+                fs.closeSync($fd)
+              }
+              catch (err) {
+                console.error(err.stack || err);
+              }
+            }
+
+            $fd = fd_stdout = fd_stderr = fs.openSync('/dev/ttys001', 'a');
+
+            child = cp.spawn(executable, execStringArray, {
+              env: Object.assign({}, process.env, {
+                SUMAN_DEBUG: 'ys'
+              }),
+              // stdio: [ 'ignore', 1, 2 ]
             });
 
-          console.log(' => Stdout/stderr streams open/ready, now spawing child process...');
+            child.stdout.setEncoding('utf8');
+            child.stderr.setEncoding('utf8');
 
-          if (child) {
-            child.kill();
+            const strm = fs.createWriteStream(projectWatcherOutputLogPath);
+            child.stdout.pipe(strm);
+            child.stderr.pipe(strm);
+
+            console.log('$fd', $fd);
+
+            if (tty.isatty(fd_stdout)) {
+              console.error('fd with value => ', fd_stdout, '*is* a tty!');
+              const stdoutStrm = fs.createWriteStream(null, { fd: fd_stdout });
+              child.stdout.pipe(stdoutStrm);
+            }
+            else {
+              console.error('fd with value => ', fd_stdout, 'is not a tty');
+            }
+
+            if (tty.isatty(fd_stderr)) {
+              console.error('fd with value => ', fd_stderr, '*is* a tty!');
+              const stderrStrm = fs.createWriteStream(null, { fd: fd_stderr });
+              child.stderr.pipe(stderrStrm);
+            }
+            else {
+              console.error('fd with value => ', fd_stderr, 'is not a tty');
+            }
+
+            child.on('close', function () {
+              console.log(' => Suman server => project-watcher child process has fired "close" event.');
+            });
+
+            // })
+
           }
 
-          child = cp.spawn(executable, execStringArray, {
-            env: Object.assign({}, process.env, {
-              SUMAN_DEBUG: 'ys'
-            })
-          });
-
-          child.stdout.setEncoding('utf8');
-          child.stderr.setEncoding('utf8');
-
-          const strm = fs.createWriteStream(projectWatcherOutputLogPath);
-          child.stdout.pipe(strm);
-          child.stderr.pipe(strm);
-
-          child.on('close', function () {
-            console.log(' => Suman server => project-watcher child process has fired "close" event.');
-          });
-
-          // })
-
         }
-
-      });
+      );
 
     });
 

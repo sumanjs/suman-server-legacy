@@ -15,6 +15,9 @@ process.on('SIGINT', function (code) {
 process.on('uncaughtException', function (err) {
     console.error('\n\n => Suman Server => Uncaught Exception => ' + err.stack, '\n');
     globalErr = err;
+    if(String(err.stack).match(/EBADF: bad file descriptor, close/)){
+        return;
+    }
     process.nextTick(function () {
         process.exit(1);
     });
