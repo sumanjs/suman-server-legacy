@@ -310,8 +310,8 @@ module.exports = function (server) {
       const script = data.script;
       var exclude = data.exclude || [];
       var include = data.include || [];
-      // var fd_stdout = data.fd_stdout;
-      // var fd_stderr = data.fd_stderr;
+      var fd_stdout = data.fd_stdout;
+      var fd_stderr = data.fd_stderr;
 
       console.log('fd_stdout', fd_stdout, 'fd_stderr', fd_stderr);
 
@@ -344,8 +344,9 @@ module.exports = function (server) {
         console.log(' => Suman server => watched paths:', watched);
       });
 
-      var fd_stdout, fd_stderr;
-      var $fd;
+      // var fd_stdout, fd_stderr;
+      var $fd, stderrStrm, stdoutStrm;
+      var flip = true;
       var to, child;
 
       projectWatcher.on('change', function (p) {
@@ -370,7 +371,7 @@ module.exports = function (server) {
                 flag: 'w'
               });
 
-            console.log(' => Stdout/stderr streams open/ready, now spawing child process...');
+            console.log(' => Stdout/stderr streams open/ready, now spawning child process...');
 
             if (child) {
               try {
@@ -381,7 +382,25 @@ module.exports = function (server) {
               }
             }
 
-            if ($fd) {
+            if (stdoutStrm) {
+              try {
+                stdoutStrm.end();
+              }
+              catch (err) {
+                console.error(err.stack || err);
+              }
+            }
+
+            if (stderrStrm) {
+              try {
+                stderrStrm.end();
+              }
+              catch (err) {
+                console.error(err.stack || err);
+              }
+            }
+
+            if ($fd !== undefined) {
               try {
                 fs.closeSync($fd)
               }
@@ -390,7 +409,18 @@ module.exports = function (server) {
               }
             }
 
-            $fd = fd_stdout = fd_stderr = fs.openSync('/dev/ttys001', 'a');
+            // $fd = fd_stdout = fd_stderr = fs.openSync('/dev/ttys001', 'a');
+
+            try {
+              if(flip){
+                $fd = fs.openSync(fd_stdout, 'a');
+              }
+            }
+            catch (err) {
+              flip = false; // user probably closed original terminal window, stop trying to write to any terminal/tty
+              console.error(err.stack || err);
+              $fd = null;
+            }
 
             child = cp.spawn(executable, execStringArray, {
               env: Object.assign({}, process.env, {
@@ -408,26 +438,33 @@ module.exports = function (server) {
 
             console.log('$fd', $fd);
 
-            if (tty.isatty(fd_stdout)) {
-              console.error('fd with value => ', fd_stdout, '*is* a tty!');
-              const stdoutStrm = fs.createWriteStream(null, { fd: fd_stdout });
+            if (tty.isatty($fd)) {
+              console.error('fd with value => ', $fd, '*is* a tty!');
+              stdoutStrm = fs.createWriteStream(null, { fd: $fd });
               child.stdout.pipe(stdoutStrm);
             }
             else {
-              console.error('fd with value => ', fd_stdout, 'is not a tty');
+              console.error('fd with value => ', $fd, 'is not a tty');
             }
 
-            if (tty.isatty(fd_stderr)) {
-              console.error('fd with value => ', fd_stderr, '*is* a tty!');
-              const stderrStrm = fs.createWriteStream(null, { fd: fd_stderr });
+            if (tty.isatty($fd)) {
+              console.error('fd with value => ', $fd, '*is* a tty!');
+              stderrStrm = fs.createWriteStream(null, { fd: $fd });
               child.stderr.pipe(stderrStrm);
             }
             else {
-              console.error('fd with value => ', fd_stderr, 'is not a tty');
+              console.error('fd with value => ', $fd, 'is not a tty');
             }
 
             child.on('close', function () {
               console.log(' => Suman server => project-watcher child process has fired "close" event.');
+              try {
+                stdoutStrm.end(' => To stop the watcher process, use "$ suman --stop-watching"');
+                stderrStrm.end();
+              }
+              catch (err) {
+                console.error(err.stack || err);
+              }
             });
 
             // })
