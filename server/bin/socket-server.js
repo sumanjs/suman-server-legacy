@@ -36,7 +36,9 @@ var watching = false;
 const sumanExecutablePath = path.resolve(global.projectRoot, 'node_modules/.bin/suman');
 const watcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/watcher-output.log');
 const projectWatcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/project-watcher-output.log');
-var strm = fs.createWriteStream(projectWatcherOutputLogPath);
+var strm1;
+// var strm1 = fs.createWriteStream(projectWatcherOutputLogPath);
+// var strm2 = fs.createWriteStream(projectWatcherOutputLogPath);
 
 if (process.env.SUMAN_DEBUG === 'yes') {
   console.log('sumanMatchesAll:', global.sumanMatchesAll);
@@ -324,12 +326,6 @@ module.exports = function (server) {
 
       }
 
-      // fs.writeFileSync(projectWatcherOutputLogPath,
-      //   //'w' flag truncates the file, the only time the file is truncated
-      //   '\n\n => Suman watcher => file changed: "' + p + '"\n\n', {
-      //     flags: 'w',
-      //     flag: 'w'
-      //   });
 
       const script = data.script;
       var exclude = data.exclude || [];
@@ -340,6 +336,7 @@ module.exports = function (server) {
       console.log('fd_stdout', fd_stdout, 'fd_stderr', fd_stderr);
 
       const execStringArray = String(script).split(/\s+/);
+      const execStringArrayCopy = ['" $',execStringArray.join(' '),'"'].join(' ');
       const executable = execStringArray.shift();
 
       assert(Array.isArray(exclude) && Array.isArray(include), 'exclude/include are not arrays.');
@@ -443,19 +440,16 @@ module.exports = function (server) {
               child.stdout.setEncoding('utf8');
               child.stderr.setEncoding('utf8');
 
-
-              const firstMsg = '\n\n => Suman watcher => file changed: "' + p + '"\n\n';
-
-              strm = fs.createWriteStream(projectWatcherOutputLogPath);
-              strm.write(firstMsg);
-              child.stdout.pipe(strm);
-              child.stderr.pipe(strm);
-
               console.log('$fd', $fd);
 
               const stdioStrm = fs.createWriteStream(null, { fd: $fd });
 
+
+              const firstMsg = '\n\n => Suman watcher => file changed: "' + p + '"\n';
+              const secondMsg = '\n => Now running the following command => ' + execStringArrayCopy + '\n\n';
+
               stdioStrm.write(firstMsg);
+              stdioStrm.write(secondMsg);
 
               if (tty.isatty($fd)) {
                 console.error('fd with value => ', $fd, '*is* a tty!');
@@ -472,6 +466,25 @@ module.exports = function (server) {
               else {
                 console.error('fd with value => ', $fd, 'is not a tty');
               }
+
+
+
+
+              fs.writeFileSync(projectWatcherOutputLogPath,
+                //'w' flag truncates the file, the only time the file is truncated
+                '\n\n => Suman watcher => file changed: "' + p + '"\n\n', {
+                  flags: 'w',
+                  flag: 'w'
+                });
+
+              strm1 = fs.createWriteStream(projectWatcherOutputLogPath);
+              // strm2 = fs.createWriteStream(projectWatcherOutputLogPath);
+              strm1.write(firstMsg);
+              strm1.write(secondMsg);
+              child.stdout.pipe(strm1);
+              child.stderr.pipe(strm1);
+
+
 
             };
 
