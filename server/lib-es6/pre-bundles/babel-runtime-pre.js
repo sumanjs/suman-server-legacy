@@ -3,4 +3,7 @@
  */
 
 
-const br = require('babel-polyfill');
+define('babel-polyfill', function(require){
+    return require('babel-polyfill');
+});
+

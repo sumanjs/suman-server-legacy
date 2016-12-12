@@ -50,18 +50,19 @@ requirejs.onResourceLoad = function (context, map, depArray) {
 };
 
 
-require(['bundles/babel-runtime'], function () {
-
-    $(document).ready(function () {
+require(['bundles/babel-runtime','jquery'], function (br, $) {
 
 
-        require(['js/pages/results/app'], function (Application) {
-            console.log('Application module loaded ----> (3) ----> time:', (Date.now() - window.startDate));
-            Application.start();
-        });
-
-
-    });
+    console.log('br => ', br);
+    // $(document).ready(function () {
+    //
+    //     require(['js/pages/results/app'], function (Application) {
+    //         console.log('Application module loaded ----> (3) ----> time:', (Date.now() - window.startDate));
+    //         Application.start();
+    //     });
+    //
+    //
+    // });
 
 });
 

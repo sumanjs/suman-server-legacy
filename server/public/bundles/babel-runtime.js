@@ -44,13 +44,15 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
 
 	/**
 	 * Created by oleg on 12/12/16.
 	 */
 
-	var br = __webpack_require__(1);
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+	  return __webpack_require__(1);
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
 /* 1 */

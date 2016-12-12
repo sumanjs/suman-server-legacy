@@ -103,5 +103,23 @@ gulp.task('nodemon', ['webpack'], function () {
 
 });
 
+gulp.task('default', function () {
 
+    nodemon({
+
+        script: 'server/bin/www',
+        ext: 'js',
+        ignore: ['server/lib-es5/**/*', 'server/public/*', '*.git/*', '*.idea/*', 'gulpfile.js'],
+        args: [], //TODO: add these from command line
+        nodeArgs: ['--harmony'],
+        env: Object.assign({}, process.env, {
+            NODE_ENV: $node_env || 'development',
+            SUMAN_CONFIG: JSON.stringify(defaultConfig),
+            SUMAN_SERVER_OPTS: '',
+            SUMAN_PROJECT_ROOT: __dirname
+        })
+
+    }).on('restart', []);
+
+});
 
