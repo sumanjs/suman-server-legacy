@@ -53,12 +53,13 @@ app.use(function (req, res, next) {
         console.error(err.stack || err);
         res.json({
             error: err.stack || err
-        })
+        });
     });
 
     d.run(next);
 
 });
+
 
 
 function onEnd(msg) {
