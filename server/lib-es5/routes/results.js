@@ -10,16 +10,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by denman on 12/16/15.
  */
 
-//#config
+//config
 var config = require('adore')(module, '*suman*', 'server/config/conf');
 
-//#core
+//core
+var util = require('util');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
 var async = require('async');
 
-//#npm
+//npm
 var React = require('react');
 var ReactDOMServer = require('react-dom/server');
 
@@ -27,7 +28,7 @@ var express = require('express');
 var router = express.Router();
 var _ = require('underscore');
 
-//#project
+//project
 
 //react-components
 
@@ -37,9 +38,10 @@ var TestFileSuite = require('../react-components/TestFileSuite');
 var Accordion = require('../react-components/AccordionComp');
 var AccordionSection = require('../react-components/AccordionSection');
 
-//#helpers
+//helpers
 var helpers = require('./helpers');
 // const findSumanServer = require('../../lib/find-suman-server');
+
 
 router.get('/', function (req, res, next) {
 
@@ -166,7 +168,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/done/:runId', function (req, res, next) {
 
-    var data = body.data;
+    var data = req.body.data;
 
     try {
         var json = (0, _stringify2.default)(data.test);
@@ -340,7 +342,7 @@ function getRunId(req, res, next) {
 
                 var childData = [];
 
-                async.each(items, function (item, cb) {
+                async.map(items, function (item, cb) {
 
                     fs.readFile(path.resolve(dirName + '/' + item), {}, function (err, data) {
 
@@ -354,6 +356,7 @@ function getRunId(req, res, next) {
                             }
 
                             data = JSON.parse('[' + data + ']'); //make parseable by JSON
+
 
                             var topLevelDescribe = null;
 
@@ -390,9 +393,10 @@ function getRunId(req, res, next) {
                             results
                         ));
 
-                        // res.send(data);
+                        console.log('data in results => ', data);
+                        console.log('childData in results => ', util.inspect(childData));
 
-                        res.render('index', {
+                        res.render('results', {
                             data: data,
                             childData: (0, _stringify2.default)(childData)
                         });

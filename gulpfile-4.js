@@ -61,22 +61,6 @@ gulp.task('convert', gulp.series('transpile-lib', function (cb) {   //convert co
 }));
 
 
-gulp.task('collect-coverage', gulp.series(function (cb) {
-
-	cp.exec('istanbul cover test/build-tests/test6.js test/build-tests/test7.js', function (err, stdout, stderr) {
-
-		if (err) {
-			console.error(err.stack);
-		}
-		console.log(stdout);
-		console.log(stderr);
-
-		cb(null);
-
-	});
-
-}));
-
 // gulp.task('default-example', gulp.series('del', function () {
 // 	// default task code here
 // }));

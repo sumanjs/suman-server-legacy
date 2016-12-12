@@ -1,8 +1,6 @@
 const React = require('react');
-var $ = require('jquery');
+const $ = require('jquery');
 const ReactDOM = require('react-dom');
-
-
 const TestFileSuite = require('./TestFileSuite');
 
 
@@ -51,13 +49,14 @@ const AccordionSection = React.createClass({
 
             }).done((resp) => {
 
-                console.log('resp:',resp);
+                console.log('resp!!!:',resp);
                 this.state.testData = JSON.parse(resp);
                 this.forceUpdate();
 
 
             }).fail(()=> {
 
+                console.log('bad server response!');
                 this.state.testData = 'Bad server response';
                 this.forceUpdate();
 

@@ -4,19 +4,21 @@
  * Created by denmanm1 on 3/31/16.
  */
 
-define(['react', 'react-dom'], function (React, ReactDOM) {
+var React = require('react');
+var ReactDOM = require('react-dom');
 
-    return function (Parent, parentProps, Child, childDataArray, documentId) {
+module.exports = function (Parent, parentProps, Child, childDataArray, documentId) {
 
-        var children = childDataArray.map(function (props) {
+    var children = childDataArray.map(function (props) {
 
-            return React.createElement(Child, props);
-        });
+        console.log('childDataArray => ', props);
 
-        ReactDOM.render(React.createElement(
-            Parent,
-            parentProps,
-            children
-        ), document.getElementById(documentId));
-    };
-});
+        return React.createElement(Child, props);
+    });
+
+    ReactDOM.render(React.createElement(
+        Parent,
+        parentProps,
+        children
+    ), document.getElementById(documentId));
+};

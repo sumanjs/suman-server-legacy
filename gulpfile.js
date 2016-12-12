@@ -10,6 +10,7 @@ const cp = require('child_process');
 
 //gulp plugins
 const babel = require('gulp-babel');
+// const react = require('gulp-react');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const rename = require('gulp-rename');
@@ -17,7 +18,7 @@ const nodemon = require('gulp-nodemon');
 const requirejs = require('gulp-requirejs');
 
 //suman utils
-const defaultConfig = require('suman-utils/default.suman.conf.js');
+const defaultConfig = require('./suman.default.conf.js');
 
 //args & env
 const argv = JSON.parse(JSON.stringify(process.argv));
@@ -36,6 +37,17 @@ gulp.task('transpile-lib', [/*'clean-temp'*/], function () {
 		}))
 		.pipe(gulp.dest('server/lib-es5'));
 });
+
+
+
+// gulp.task('transpile-lib', [/*'clean-temp'*/], function () {
+//     return gulp.src(['server/lib-es6/**/*.js'])
+//         .pipe(react({
+//             harmony: true
+//         }))
+//         .pipe(gulp.dest('server/lib-es5'));
+// });
+
 
 gulp.task('transpile-rc', ['transpile-lib'], function () {
 	return gulp.src(['server/lib-es5/react-components/**/*.js'])
@@ -63,23 +75,16 @@ gulp.task('convert', ['transpile-lib'], function (cb) {   //convert commonjs to 
 
 });
 
-gulp.task('collect-coverage', [], function (cb) {
 
-	cp.exec('istanbul cover test/build-tests/test6.js test/build-tests/test7.js', function (err, stdout, stderr) {
+gulp.task('webpack',['transpile-lib'], function(cb){
 
-		if (err) {
-			console.error(err.stack);
-		}
-		console.log(stdout);
-		console.log(stderr);
-
-		cb(null);
-
-	});
-
+	const n = cp.spawn('webpack');
+	n.on('close',cb);
+	n.stderr.setEncoding('utf8');
+	n.stderr.on('error', console.error.bind(console));
 });
 
-gulp.task('nodemon', ['convert'], function () {
+gulp.task('nodemon', ['webpack'], function () {
 
 	nodemon({
 
@@ -91,10 +96,11 @@ gulp.task('nodemon', ['convert'], function () {
 		env: Object.assign({}, process.env, {
 			NODE_ENV: $node_env || 'development',
 			SUMAN_CONFIG: JSON.stringify(defaultConfig),
-			SUMAN_SERVER_OPTS: ''
+			SUMAN_SERVER_OPTS: '',
+            SUMAN_PROJECT_ROOT: __dirname
 		})
 
-	}).on('restart', ['convert']);
+	}).on('restart', ['webpack']);
 
 });
 

@@ -3,7 +3,6 @@ define(function (require, exports, module) {'use strict';
 var React = require('react');
 var $ = require('jquery');
 var ReactDOM = require('react-dom');
-
 var TestFileSuite = require('./TestFileSuite');
 
 var AccordionSection = React.createClass({

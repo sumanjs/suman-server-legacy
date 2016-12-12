@@ -3,17 +3,17 @@
  */
 
 
-
-//#config
+//config
 const config = require('adore')(module, '*suman*', 'server/config/conf');
 
-//#core
+//core
+const util = require('util');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const async = require('async');
 
-//#npm
+//npm
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 
@@ -21,7 +21,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('underscore');
 
-//#project
+//project
 
 //react-components
 
@@ -31,7 +31,7 @@ const TestFileSuite = require('../react-components/TestFileSuite');
 const Accordion = require('../react-components/AccordionComp');
 const AccordionSection = require('../react-components/AccordionSection');
 
-//#helpers
+//helpers
 const helpers = require('./helpers');
 // const findSumanServer = require('../../lib/find-suman-server');
 
@@ -313,7 +313,7 @@ function getRunId(req, res, next) {
 
             const childData = [];
 
-            async.each(items, function (item, cb) {
+            async.map(items, function (item, cb) {
 
                 fs.readFile(path.resolve(dirName + '/' + item), {}, function (err, data) {
 
@@ -370,9 +370,11 @@ function getRunId(req, res, next) {
                         </Accordion>
                     );
 
-                    // res.send(data);
+                    console.log('data in results => ', data);
+                    console.log('childData in results => ', util.inspect(childData));
 
-                    res.render('index', {
+
+                    res.render('results', {
                         data: data,
                         childData: JSON.stringify(childData)
                     });

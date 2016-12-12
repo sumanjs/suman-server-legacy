@@ -15,3 +15,13 @@ TypeError: Cannot read property 'desc' of null
 
 
     //////////////////////////////////////
+
+
+http://localhost:6969/babel-runtime/core-js/json/stringify.js Failed to load resource: the server responded with a status of 404 (Not Found)
+require.js:140 Uncaught Error: Script error for "babel-runtime/core-js/json/stringify"
+http://requirejs.org/docs/errors.html#scripterror
+    at makeError (require.js:165)
+    at HTMLScriptElement.onScriptError (require.js:1732)
+
+
+    //////////////////////////////////////////

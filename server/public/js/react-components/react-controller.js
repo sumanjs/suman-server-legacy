@@ -1,22 +1,23 @@
-'use strict';
+define(function (require, exports, module) {'use strict';
 
 /**
  * Created by denmanm1 on 3/31/16.
  */
 
-define(['react', 'react-dom'], function (React, ReactDOM) {
+var React = require('react');
+var ReactDOM = require('react-dom');
 
-    return function (Parent, parentProps, Child, childDataArray, documentId) {
+module.exports = function (Parent, parentProps, Child, childDataArray, documentId) {
 
-        var children = childDataArray.map(function (props) {
+    var children = childDataArray.map(function (props) {
 
-            return React.createElement(Child, props);
-        });
+        return React.createElement(Child, props);
+    });
 
-        ReactDOM.render(React.createElement(
-            Parent,
-            parentProps,
-            children
-        ), document.getElementById(documentId));
-    };
+    ReactDOM.render(React.createElement(
+        Parent,
+        parentProps,
+        children
+    ), document.getElementById(documentId));
+};
 });

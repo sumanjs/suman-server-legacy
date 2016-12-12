@@ -85,25 +85,6 @@ gulp.task('convert', ['transpile-lib'], function (cb) {   //convert commonjs to 
 });
 
 
-
-
-gulp.task('collect-coverage', [], function (cb) {
-
-    cp.exec('istanbul cover test/build-tests/test6.js test/build-tests/test7.js', function (err, stdout, stderr) {
-
-        if (err) {
-            console.error(err.stack);
-        }
-        console.log(stdout);
-        console.log(stderr);
-
-        cb(null);
-
-    });
-
-});
-
-
 gulp.task('nodemon', ['convert'], function () {
 
     nodemon({

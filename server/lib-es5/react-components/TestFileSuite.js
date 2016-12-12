@@ -38,11 +38,11 @@ module.exports = React.createClass({
                 tests.complete ? React.createElement(
                     'span',
                     { className: 'items', id: 'tick' },
-                    '✓'
+                    '\u2713'
                 ) : React.createElement(
                     'span',
                     { className: 'items', id: 'cross' },
-                    '✗'
+                    '\u2717'
                 ),
                 ', Type: ',
                 React.createElement(
@@ -85,7 +85,7 @@ module.exports = React.createClass({
                     tests.dateComplete - tests.dateStarted
                 )
             );
-        }.bind(this));
+        });
 
         return React.createElement(
             'ul',
@@ -152,7 +152,7 @@ module.exports = React.createClass({
     },
 
     getDescribes: function getDescribes() {
-        console.log('data:', this.props.data);
+        console.log('TestFileSuite data:', this.props.data);
         if (this.props.data && this.props.data[0]) {
             return this.recurse(this.props.data[0]);
         } else {
