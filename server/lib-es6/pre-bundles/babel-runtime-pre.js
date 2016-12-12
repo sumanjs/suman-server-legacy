@@ -3,7 +3,11 @@
  */
 
 
-define('babel-polyfill', function(require){
-    return require('babel-polyfill');
-});
+// define('underscore', function(require){
+//     return require('underscore');
+// });
 
+
+module.exports = {
+    'tobias': 'koppers'
+};

@@ -17,12 +17,14 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: __dirname,
-                loader: 'babel-loader'
+                loader: 'babel-loader',
+                exclude: /node_modules/
             },
             {
                 test: /\.json$/,
                 include: __dirname,
-                loader: 'json-loader'
+                loader: 'json-loader',
+                exclude: /node_modules/
             }
         ]
     },

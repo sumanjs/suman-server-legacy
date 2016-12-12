@@ -54,6 +54,8 @@ require(['bundles/babel-runtime','jquery'], function (br, $) {
 
 
     console.log('br => ', br);
+    console.log('$$$$ => ', $);
+
     // $(document).ready(function () {
     //
     //     require(['js/pages/results/app'], function (Application) {
