@@ -6,6 +6,7 @@ module.exports = {
     entry: {
       index:  './server/lib-es5/pages/index/app.js',
       results:  './server/lib-es5/pages/results/app.js',
+      'babel-runtime': './server/lib-es6/pre-bundles/babel-runtime-pre.js'
     },
     output: {
         path: __dirname + '/server/public/bundles',
@@ -15,12 +16,12 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                include: __dirname + '/server/lib-es5',
+                include: __dirname,
                 loader: 'babel-loader'
             },
             {
                 test: /\.json$/,
-                include: __dirname + '/server/lib-es5',
+                include: __dirname,
                 loader: 'json-loader'
             }
         ]
