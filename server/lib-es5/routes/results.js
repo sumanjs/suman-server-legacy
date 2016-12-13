@@ -1,11 +1,5 @@
 'use strict';
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
  * Created by denman on 12/16/15.
  */
@@ -171,7 +165,7 @@ router.post('/done/:runId', function (req, res, next) {
     var data = req.body.data;
 
     try {
-        var json = (0, _stringify2.default)(data.test);
+        var json = JSON.stringify(data.test);
 
         if (data.outputPath) {
             fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
@@ -398,7 +392,7 @@ function getRunId(req, res, next) {
 
                         res.render('results', {
                             data: data,
-                            childData: (0, _stringify2.default)(childData)
+                            childData: JSON.stringify(childData)
                         });
                     }
                 });
