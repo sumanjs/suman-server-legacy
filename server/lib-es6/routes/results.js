@@ -418,6 +418,7 @@ router.get('/:runId/:testId', function (req, res, next) {
             data = '[' + data + ']'; //make parseable by JSON
             // var parsed = JSON.parse(data);
             // console.log('parsed:', parsed);
+            console.log(' data sent to front-end from back-end => ',util.inspect(data));
             res.send(data);
             // res.send(ReactDOMServer.renderToString(<TestFileSuite data={parsed}/>));
         }

@@ -29776,7 +29776,6 @@
 	    },
 
 	    getDescribes: function getDescribes() {
-	        console.log('TestFileSuite data:', this.props.data);
 	        if (this.props.data && this.props.data[0]) {
 	            return this.recurse(this.props.data[0]);
 	        } else {

@@ -34,6 +34,7 @@
     "gulp-react": "^3.1.0",
     "jquery": "^2.2.2",
     "lodash": "^4.6.1",
+    "material-ui": "^0.16.5",
     "merge-descriptors": "^1.0.1",
     "morgan": "^1.6.1",
     "poolio": "latest",
