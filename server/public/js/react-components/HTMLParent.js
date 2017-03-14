@@ -4,9 +4,9 @@ define(function (require, exports, module) {'use strict';
  * Created by denmanm1 on 3/30/16.
  */
 
-var React = require('react');
+let React = require('react');
 
-var TestFileSuite = require('./TestFileSuite');
+let TestFileSuite = require('./TestFileSuite');
 
 module.exports = React.createClass({
     displayName: 'exports',

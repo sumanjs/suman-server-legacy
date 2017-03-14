@@ -1,8 +1,8 @@
 'use strict';
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
+let _stringify = require('babel-runtime/core-js/json/stringify');
 
-var _stringify2 = _interopRequireDefault(_stringify);
+let _stringify2 = _interopRequireDefault(_stringify);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11,42 +11,42 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 //#config
-var config = require('adore')(module, '*suman*', 'server/config/conf');
+let config = require('adore')(module, '*suman*', 'server/config/conf');
 
 //#core
-var fs = require('fs');
-var os = require('os');
-var path = require('path');
-var async = require('async');
+let fs = require('fs');
+let os = require('os');
+let path = require('path');
+let async = require('async');
 
 //#npm
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+let React = require('react');
+let ReactDOMServer = require('react-dom/server');
 
-var express = require('express');
-var router = express.Router();
-var _ = require('underscore');
+let express = require('express');
+let router = express.Router();
+let _ = require('underscore');
 
 //#project
 
 //react-components
 
-var HTMLParent = require('../react-components/HTMLParent');
-var HTMLAdopterParent = require('../react-components/HTMLAdopterParent');
-var TestFileSuite = require('../react-components/TestFileSuite');
-var Accordion = require('../react-components/AccordionComp');
-var AccordionSection = require('../react-components/AccordionSection');
+let HTMLParent = require('../react-components/HTMLParent');
+let HTMLAdopterParent = require('../react-components/HTMLAdopterParent');
+let TestFileSuite = require('../react-components/TestFileSuite');
+let Accordion = require('../react-components/AccordionComp');
+let AccordionSection = require('../react-components/AccordionSection');
 
 //#helpers
-var helpers = require('./helpers');
-var watcher = helpers.watcher;
+let helpers = require('./helpers');
+let watcher = helpers.watcher;
 
 router.post('/done/:runId', function (req, res, next) {
 
-	var data = body.data;
+	let data = body.data;
 
 	try {
-		var json = (0, _stringify2.default)(data.test);
+		let json = (0, _stringify2.default)(data.test);
 
 		if (data.outputPath) {
 			fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
@@ -62,9 +62,9 @@ router.post('/done/:runId', function (req, res, next) {
 
 router.post('/watch', function (req, res, next) {
 
-	var paths = req.body.paths;
+	let paths = req.body.paths;
 
-	var w = watcher.watcher;
+	let w = watcher.watcher;
 
 	if (w) {
 		w.add(paths);

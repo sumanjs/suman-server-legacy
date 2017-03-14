@@ -6,7 +6,7 @@
 
 define(['react'], function (React) {
 
-    var Section = React.createClass({
+    let Section = React.createClass({
         displayName: 'Section',
 
         handleClick: function handleClick(e) {
@@ -36,7 +36,7 @@ define(['react'], function (React) {
         }
     });
 
-    var Accordion = React.createClass({
+    let Accordion = React.createClass({
         displayName: 'Accordion',
 
         render: function render() {

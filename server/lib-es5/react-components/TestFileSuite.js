@@ -1,8 +1,8 @@
 'use strict';
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
+let _stringify = require('babel-runtime/core-js/json/stringify');
 
-var _stringify2 = _interopRequireDefault(_stringify);
+let _stringify2 = _interopRequireDefault(_stringify);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10,8 +10,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Created by denmanm1 on 3/30/16.
  */
 
-var React = require('react');
-var _ = require('lodash');
+let React = require('react');
+let _ = require('lodash');
 
 module.exports = React.createClass({
     displayName: 'exports',
@@ -24,7 +24,7 @@ module.exports = React.createClass({
     },
 
     formatTestCases: function formatTestCases(items) {
-        var testCases = items.map(function (tests) {
+        let testCases = items.map(function (tests) {
             return React.createElement(
                 'li',
                 { className: 'testResults' },
@@ -110,9 +110,9 @@ module.exports = React.createClass({
     },
 
     recurse: function recurse(item) {
-        var _this = this;
+        let _this = this;
 
-        var children = this.findChildren(item.children.map(function (child) {
+        let children = this.findChildren(item.children.map(function (child) {
             return child.testId;
         }));
 

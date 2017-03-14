@@ -1,3 +1,7 @@
 .idea
 node_modules
 sqlite
+
+*suman/logs/
+
+test-target/

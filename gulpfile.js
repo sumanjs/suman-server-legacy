@@ -17,7 +17,7 @@ const nodemon = require('gulp-nodemon');
 const requirejs = require('gulp-requirejs');
 
 //suman utils
-const defaultConfig = require('suman-utils/default.suman.conf.js');
+const defaultConfig = require('./suman.conf');
 
 //args & env
 const argv = JSON.parse(JSON.stringify(process.argv));

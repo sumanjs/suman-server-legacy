@@ -1,10 +1,10 @@
 define(function (require, exports, module) {'use strict';
 
-var React = require('react');
+let React = require('react');
 
-var Section = require('./AccordionSection2');
+let Section = require('./AccordionSection2');
 
-var Accordion = React.createClass({
+let Accordion = React.createClass({
     displayName: 'Accordion',
 
     render: function render() {

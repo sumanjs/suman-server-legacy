@@ -4,9 +4,7 @@
   "description": "Server/DB/watcher for Suman test runner",
   "main": "index.js",
   "scripts": {
-    "test": "suman",
-    "remove-private-dirs": "git rm -r --ignore-unmatch private",
-    "remove-private-files": "git rm --ignore-unmatch exp*.js"
+    "test": "suman"
   },
   "repository": {
     "type": "git",

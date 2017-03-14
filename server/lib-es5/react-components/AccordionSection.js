@@ -1,12 +1,12 @@
 'use strict';
 
-var React = require('react');
-var $ = require('jquery');
-var ReactDOM = require('react-dom');
+let React = require('react');
+let $ = require('jquery');
+let ReactDOM = require('react-dom');
 
-var TestFileSuite = require('./TestFileSuite');
+let TestFileSuite = require('./TestFileSuite');
 
-var AccordionSection = React.createClass({
+let AccordionSection = React.createClass({
     displayName: 'AccordionSection',
 
 
@@ -20,7 +20,7 @@ var AccordionSection = React.createClass({
 
     render: function render() {
 
-        var className = 'accordion-section' + (this.props._selected ? ' selected' : '');
+        let className = 'accordion-section' + (this.props._selected ? ' selected' : '');
 
         // <div className='body'>
         //     {this.props.children}
@@ -43,7 +43,7 @@ var AccordionSection = React.createClass({
     },
 
     onSelect: function onSelect(e) {
-        var _this = this;
+        let _this = this;
 
         console.log('event:', e);
         // tell the parent Accordion component that this section was selected

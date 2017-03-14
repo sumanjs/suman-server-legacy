@@ -2,15 +2,15 @@
  * Created by denman on 12/14/2015.
  */
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
 
 module.exports = function (req, res) {
 
-    var helpers = require('./index');
+    let helpers = require('./index');
 
-    //var error = new Error('Not real error');
+    //let error = new Error('Not real error');
     //console.log(error.stack);
 
     res.end();

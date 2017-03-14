@@ -25,20 +25,20 @@ const _ = require('lodash');
 const Pool = require('poolio');
 
 //project
-const runTranspile = require('suman-utils/run-transpile');
+const runTranspile = require('suman-utils').runTranspile;
 
 //////////////////////////////////////////////////
 
-var watching = false;
+let watching = false;
 
 /////////////////////////////////////////////////
 
 const sumanExecutablePath = path.resolve(global.projectRoot, 'node_modules/.bin/suman');
 const watcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/watcher-output.log');
 const projectWatcherOutputLogPath = path.resolve(global.sumanHelperDirRoot + '/logs/project-watcher-output.log');
-var strm1;
-// var strm1 = fs.createWriteStream(projectWatcherOutputLogPath);
-// var strm2 = fs.createWriteStream(projectWatcherOutputLogPath);
+let strm1;
+// let strm1 = fs.createWriteStream(projectWatcherOutputLogPath);
+// let strm2 = fs.createWriteStream(projectWatcherOutputLogPath);
 
 if (process.env.SUMAN_DEBUG === 'yes') {
   console.log('sumanMatchesAll:', global.sumanMatchesAll);
@@ -72,7 +72,7 @@ function getStream () {
 //TODO: if stdout and stderr share the same writable stream maybe their output will be in the right order?
 const workerPath = require.resolve('./suman-watch-worker.js');
 
-var pool;
+let pool;
 
 function createPool () {
   pool = pool || new Pool({
@@ -179,7 +179,7 @@ function logMessageToWatcherLog (msg) {
 
 function runTestWithSuman ($tests) {
 
-  var logExtraMsg = false;
+  let logExtraMsg = false;
 
   console.log('$tests =>', util.inspect($tests));
 
@@ -282,7 +282,7 @@ function runTestWithSuman ($tests) {
 }
 
 const pathHash = {};
-var watcher;
+let watcher;
 
 //TODO: look out for for memory leaks here
 module.exports = function (server) {
@@ -301,7 +301,7 @@ module.exports = function (server) {
       console.log(' => Socket.io error => ' + err.stack || err);
     });
 
-    var flip = true;
+    let flip = true;
 
     socket.on('stop-tty', function (message) {
 
@@ -328,10 +328,10 @@ module.exports = function (server) {
 
 
       const script = data.script;
-      var exclude = data.exclude || [];
-      var include = data.include || [];
-      var fd_stdout = data.fd_stdout;
-      var fd_stderr = data.fd_stderr;
+      let exclude = data.exclude || [];
+      let include = data.include || [];
+      let fd_stdout = data.fd_stdout;
+      let fd_stderr = data.fd_stderr;
 
       console.log('fd_stdout', fd_stdout, 'fd_stderr', fd_stderr);
 
@@ -365,9 +365,9 @@ module.exports = function (server) {
         console.log(' => Suman server => watched paths:', watched);
       });
 
-      // var fd_stdout, fd_stderr;
-      var $fd, stdioStrm;
-      var to, child;
+      // let fd_stdout, fd_stderr;
+      let $fd, stdioStrm;
+      let to, child;
 
       projectWatcher.on('change', function (p) {
 
@@ -382,7 +382,7 @@ module.exports = function (server) {
             run();
           }, 500);
 
-          var fn = null;
+          let fn = null;
 
           function run () {
 
@@ -688,7 +688,7 @@ module.exports = function (server) {
     socket.on('TEST_DATA', function (data) {
 
       try {
-        var json = JSON.stringify(data.test);
+        let json = JSON.stringify(data.test);
 
         if (data.outputPath) {
 

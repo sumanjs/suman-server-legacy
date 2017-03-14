@@ -1,5 +1,5 @@
 define(function (require, exports, module) {const React = require('react');
-var $ = require('jquery');
+let $ = require('jquery');
 const ReactDOM = require('react-dom');
 
 const TestFileSuite = require('../TestFileSuite');

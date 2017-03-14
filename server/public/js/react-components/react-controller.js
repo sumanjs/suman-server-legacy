@@ -8,7 +8,7 @@ define(['react', 'react-dom'], function (React, ReactDOM) {
 
     return function (Parent, parentProps, Child, childDataArray, documentId) {
 
-        var children = childDataArray.map(function (props) {
+        let children = childDataArray.map(function (props) {
 
             return React.createElement(Child, props);
         });

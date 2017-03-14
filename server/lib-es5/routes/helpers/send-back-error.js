@@ -4,15 +4,15 @@
  * Created by denman on 12/15/15.
  */
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
 
 module.exports = function (req, res) {
 
-    var helpers = require('./index');
+    let helpers = require('./index');
 
-    var error = req.sumanData.error || new Error('unknown Suman error');
+    let error = req.sumanData.error || new Error('unknown Suman error');
     res.write(error);
     res.end();
 };

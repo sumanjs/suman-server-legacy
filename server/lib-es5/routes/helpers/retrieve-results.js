@@ -4,32 +4,32 @@
  * Created by denman on 12/14/2015.
  */
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
-var helpers = require('./index');
-var du = require('du');
-var config = global.sumanConfig;
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
+let helpers = require('./index');
+let du = require('du');
+let config = global.sumanConfig;
 
 // module.exports = function (req, res) {
 //
-//     var helpers = require('./index');
+//     let helpers = require('./index');
 //
-//     var urlTemp = String(req.parsedRequestUrl.pathname);
+//     let urlTemp = String(req.parsedRequestUrl.pathname);
 //
 //     console.log('urlTemp:', urlTemp);
 //
-//     var index = urlTemp.indexOf('/results/');
+//     let index = urlTemp.indexOf('/results/');
 //
 //     console.log('index:', index);
 //
-//     var resultsPath = urlTemp.substr(index + String('/results/').length);
+//     let resultsPath = urlTemp.substr(index + String('/results/').length);
 //
-//     //var resultsPath = urlTemp.match('/results/');
+//     //let resultsPath = urlTemp.match('/results/');
 //     //
 //     console.log('results path:', resultsPath);
 //
-//     var mainDir = path.resolve(appRootPath + '/results/');  //TODO: appRootPath removed
+//     let mainDir = path.resolve(appRootPath + '/results/');  //TODO: appRootPath removed
 //
 //     du(mainDir, function (err, size) { //get size of results dir
 //         console.log('The size of /results/ is:', size, 'bytes');
@@ -38,16 +38,16 @@ var config = global.sumanConfig;
 //
 //         if (config.resultsCapSize && config.resultsCapSize <= size) {
 //
-//             var deleteThisDir = helpers.getPathOfOldestSubdir(mainDir);
+//             let deleteThisDir = helpers.getPathOfOldestSubdir(mainDir);
 //             if (deleteThisDir) {
 //                 fs.unlinkSync(deleteThisDir);
 //             }
 //         }
 //
-//         var fsPath;
+//         let fsPath;
 //         if (resultsPath === 'latest') {
 //
-//             var serveThisDir = helpers.getPathOfMostRecentSubdir(mainDir);
+//             let serveThisDir = helpers.getPathOfMostRecentSubdir(mainDir);
 //             if (serveThisDir) {
 //                 fsPath = req.sumanData.fsPath = path.resolve(appRootPath + '/' + 'results' + '/' + serveThisDir + '/' + 'temp.html');
 //                 if (fsPath) {

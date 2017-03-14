@@ -45,7 +45,7 @@ requirejs.config({
 console.log('starting app ---> (1) ---> time:', (Date.now() - window.startDate));
 
 requirejs.onResourceLoad = function (context, map, depArray) {
-    var duration = Date.now() - window.startDate;
+    let duration = Date.now() - window.startDate;
     console.log('onResourceLoad>>>', 'duration:', duration + "ms", 'map.id:', map.id);
 };
 

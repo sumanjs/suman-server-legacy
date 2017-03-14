@@ -4,10 +4,10 @@
 
 
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
-var _ = require('underscore');
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
+let _ = require('underscore');
 
 module.exports = function (dir) {
 
@@ -17,7 +17,7 @@ module.exports = function (dir) {
 
         console.log('dir:', dir);
 
-        var filtered = fs.readdirSync(dir).filter(function (subdir) {
+        let filtered = fs.readdirSync(dir).filter(function (subdir) {
             return (!fs.statSync(path.resolve(dir + '/' + subdir)).isFile() && typeof Number(subdir) === 'number' && !isNaN(Number(subdir)));
         });
 

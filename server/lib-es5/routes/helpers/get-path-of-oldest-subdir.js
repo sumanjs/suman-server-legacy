@@ -4,10 +4,10 @@
  * Created by denman on 12/15/15.
  */
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
-var _ = require('underscore');
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
+let _ = require('underscore');
 
 module.exports = function (dir) {
 

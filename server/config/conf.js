@@ -6,9 +6,9 @@ const path = require('path');
 
 module.exports = function () {
 
-    var cwd = process.cwd();
+    let cwd = process.cwd();
 
-    // var sumanConfig, serverConfig = null;
+    // let sumanConfig, serverConfig = null;
     //
     // try {
     //     if (cfgPath) {

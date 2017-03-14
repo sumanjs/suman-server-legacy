@@ -3,16 +3,16 @@
  */
 
 
-var url = require('url');
-var fs = require('fs');
-var path = require('path');
+let url = require('url');
+let fs = require('fs');
+let path = require('path');
 
 
 module.exports = function(req,res){
 
-    var helpers = require('./index');
+    let helpers = require('./index');
 
-    var fsPath = req.sumanData.fsPath;
+    let fsPath = req.sumanData.fsPath;
 
     console.log('fsPath:', fsPath);
 
@@ -28,7 +28,7 @@ module.exports = function(req,res){
         try {
             if (stat.isFile()) {
                 res.writeHead(200);
-                var stream = fs.createReadStream(fsPath).pipe(res); //calls res.end()
+                let stream = fs.createReadStream(fsPath).pipe(res); //calls res.end()
             }
             else {
                 res.writeHead(500);

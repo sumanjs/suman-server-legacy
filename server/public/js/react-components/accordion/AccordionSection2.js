@@ -2,7 +2,7 @@ define(function (require, exports, module) {
 
 const React = require('react');
 
-var Section = React.createClass({
+let Section = React.createClass({
     displayName: 'Section',
 
 

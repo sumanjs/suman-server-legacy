@@ -19,7 +19,7 @@ module.exports = React.createClass({
 
     recurse: function recurse(item) {
 
-        var children = this.findChildren(item.children.map(function (child) {
+        let children = this.findChildren(item.children.map(function (child) {
             return child.testId;
         }));
 

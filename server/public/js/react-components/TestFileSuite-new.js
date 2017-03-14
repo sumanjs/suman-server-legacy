@@ -16,7 +16,7 @@ module.exports = React.createClass({
     },
 
     formatTestCases: function (items) {
-        var testCases = items.map(function (tests) {
+        let testCases = items.map(function (tests) {
             return React.createElement(
                 'li',
                 { className: 'testResults' },
@@ -97,7 +97,7 @@ module.exports = React.createClass({
 
     recurse: function recurse(item) {
 
-        var children = this.findChildren(item.children.map(function (child) {
+        let children = this.findChildren(item.children.map(function (child) {
             return child.testId;
         }));
 

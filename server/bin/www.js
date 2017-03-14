@@ -1,4 +1,4 @@
-var globalErr;
+let globalErr;
 
 process.on('exit', function (code) {
   if (globalErr) {
@@ -50,8 +50,11 @@ const colors = require('colors');
 
 //////////////////////////////////////////////////////////////
 
-const root = global.projectRoot = process.env.SUMAN_PROJECT_ROOT;
-const sumanConfig = global.sumanConfig = JSON.parse(process.env.SUMAN_CONFIG);
+const root = global.projectRoot = process.env.SUMAN_PROJECT_ROOT || process.cwd();
+
+
+const sumanConfig = global.sumanConfig =
+  process.env.SUMAN_CONFIG? JSON.parse(process.env.SUMAN_CONFIG) : require('../../suman.conf');
 const sumanExecutablePath = global.sumanExecutablePath = process.env.SUMAN_EXECUTABLE_PATH;
 
 if (process.env.SUMAN_DEBUG === 'yes') {

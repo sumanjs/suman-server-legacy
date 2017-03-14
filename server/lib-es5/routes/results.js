@@ -1,8 +1,8 @@
 'use strict';
 
-var _stringify = require('babel-runtime/core-js/json/stringify');
+let _stringify = require('babel-runtime/core-js/json/stringify');
 
-var _stringify2 = _interopRequireDefault(_stringify);
+let _stringify2 = _interopRequireDefault(_stringify);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11,48 +11,48 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 
 //#config
-var config = require('adore')(module, '*suman*', 'server/config/conf');
+let config = require('adore')(module, '*suman*', 'server/config/conf');
 
 //#core
-var fs = require('fs');
-var os = require('os');
-var path = require('path');
-var async = require('async');
+let fs = require('fs');
+let os = require('os');
+let path = require('path');
+let async = require('async');
 
 //#npm
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+let React = require('react');
+let ReactDOMServer = require('react-dom/server');
 
-var express = require('express');
-var router = express.Router();
-var _ = require('underscore');
+let express = require('express');
+let router = express.Router();
+let _ = require('underscore');
 
 //#project
 
 //react-components
 
-var HTMLParent = require('../react-components/HTMLParent');
-var HTMLAdopterParent = require('../react-components/HTMLAdopterParent');
-var TestFileSuite = require('../react-components/TestFileSuite');
-var Accordion = require('../react-components/AccordionComp');
-var AccordionSection = require('../react-components/AccordionSection');
+let HTMLParent = require('../react-components/HTMLParent');
+let HTMLAdopterParent = require('../react-components/HTMLAdopterParent');
+let TestFileSuite = require('../react-components/TestFileSuite');
+let Accordion = require('../react-components/AccordionComp');
+let AccordionSection = require('../react-components/AccordionSection');
 
 //#helpers
-var helpers = require('./helpers');
+let helpers = require('./helpers');
 // const findSumanServer = require('../../lib/find-suman-server');
 
 router.get('/', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var project = ['Rover', 'Viper', 'Falcor', 'Brokerify'];
-    var runBy = ['Mike', 'Alex', 'Jim'];
-    var runAt = [new Date('December 31 1999 23:59:59'), new Date('December 4, 1995 03:24:00'), new Date('December 17, 1995 09:24:00')];
+    let project = ['Rover', 'Viper', 'Falcor', 'Brokerify'];
+    let runBy = ['Mike', 'Alex', 'Jim'];
+    let runAt = [new Date('December 31 1999 23:59:59'), new Date('December 4, 1995 03:24:00'), new Date('December 17, 1995 09:24:00')];
 
     fs.readdir(path.resolve(outputDir), function (err, items) {
 
@@ -166,10 +166,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/done/:runId', function (req, res, next) {
 
-    var data = body.data;
+    let data = body.data;
 
     try {
-        var json = (0, _stringify2.default)(data.test);
+        let json = (0, _stringify2.default)(data.test);
 
         if (data.outputPath) {
             fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
@@ -185,17 +185,17 @@ router.post('/done/:runId', function (req, res, next) {
 
 router.post('/finalize', function (req, res, next) {
 
-    var body = req.body;
-    var rendered = body.rendered;
-    var timestamp = body.timestamp;
-    var outputDir = config.suman_home_dir;
+    let body = req.body;
+    let rendered = body.rendered;
+    let timestamp = body.timestamp;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var outputPath = path.resolve(outputDir + '/' + timestamp + '/temp.html');
+    let outputPath = path.resolve(outputDir + '/' + timestamp + '/temp.html');
 
     fs.writeFile(outputPath, rendered, function (err) {
         if (err) {
@@ -209,18 +209,18 @@ router.post('/finalize', function (req, res, next) {
 
 router.post('/make/new', function (req, res, next) {
 
-    var body = req.body;
-    var timestamp = body.timestamp;
+    let body = req.body;
+    let timestamp = body.timestamp;
 
     try {
-        var outputDir = config.suman_home_dir;
+        let outputDir = config.suman_home_dir;
 
         if (!outputDir) {
             console.error('no outputDir defined');
             return next(new Error('no outputDir defined'));
         }
 
-        var outputPath = path.resolve(outputDir + '/' + timestamp);
+        let outputPath = path.resolve(outputDir + '/' + timestamp);
 
         fs.mkdir(outputPath, function (err) {
             if (err) {
@@ -241,15 +241,15 @@ router.get('/latest', function (req, res, next) {
 
     //TODO: this should render git branch and commit
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
-    var runId = helpers.getPathOfMostRecentSubdir(folder);
+    let folder = path.resolve(outputDir);
+    let runId = helpers.getPathOfMostRecentSubdir(folder);
 
     if (!runId) {
         //TODO this will happen if the suman_results dir is deleted, we should add the folder if it gets deleted
@@ -264,17 +264,17 @@ router.get('/latest', function (req, res, next) {
 
 function getRunId(req, res, next) {
 
-    var folder = req.folder;
-    var runId = req.runId;
+    let folder = req.folder;
+    let runId = req.runId;
 
-    var dirName = path.resolve(folder + '/' + runId);
+    let dirName = path.resolve(folder + '/' + runId);
 
     fs.readdir(dirName, function (err, items) {
 
         if (err) {
             next(err);
         } else {
-            var j;
+            let j;
 
             (function () {
 
@@ -319,7 +319,7 @@ function getRunId(req, res, next) {
                 //     </html>
                 // )));
 
-                // var data = ReactDOMServer.renderToString((
+                // let data = ReactDOMServer.renderToString((
                 //     <html>
                 //     <head>
                 //
@@ -338,7 +338,7 @@ function getRunId(req, res, next) {
                 j = 1;
 
 
-                var childData = [];
+                let childData = [];
 
                 async.each(items, function (item, cb) {
 
@@ -348,26 +348,26 @@ function getRunId(req, res, next) {
                             cb(err);
                         } else {
 
-                            var lastChar = String(data).slice(-1);
+                            let lastChar = String(data).slice(-1);
                             if (lastChar === ',') {
                                 data = String(data).substring(0, String(data).length - 1); //strip off trailing comma
                             }
 
                             data = JSON.parse('[' + data + ']'); //make parseable by JSON
 
-                            var topLevelDescribe = null;
+                            let topLevelDescribe = null;
 
-                            for (var i = 0; i < data.length; i++) {
-                                var val = data[i];
+                            for (let i = 0; i < data.length; i++) {
+                                let val = data[i];
                                 if (val.testId === 0) {
                                     topLevelDescribe = val;
                                     break;
                                 }
                             }
 
-                            var fileName = String(path.basename(item, '.txt'));
+                            let fileName = String(path.basename(item, '.txt'));
 
-                            var props = {
+                            let props = {
                                 title: 'TestSuite: ' + topLevelDescribe.desc + ' @' + fileName,
                                 id: j++,
                                 runId: runId,
@@ -384,7 +384,7 @@ function getRunId(req, res, next) {
                     if (err) {
                         next(err);
                     } else {
-                        var data = ReactDOMServer.renderToString(React.createElement(
+                        let data = ReactDOMServer.renderToString(React.createElement(
                             Accordion,
                             { title: 'Accordion Title Here' },
                             results
@@ -405,16 +405,16 @@ function getRunId(req, res, next) {
 
 router.get('/:runId/:testId', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
-    var runId = req.params.runId;
-    var testNum = req.params.testId;
+    let folder = path.resolve(outputDir);
+    let runId = req.params.runId;
+    let testNum = req.params.testId;
 
     fs.readFile(path.resolve(folder + '/' + runId + '/' + testNum + '.txt'), {}, function (err, data) {
 
@@ -422,13 +422,13 @@ router.get('/:runId/:testId', function (req, res, next) {
             next(err);
         } else {
 
-            var lastChar = String(data).slice(-1);
+            let lastChar = String(data).slice(-1);
             if (lastChar === ',') {
                 data = String(data).substring(0, String(data).length - 1); //strip off trailing comma
             }
 
             data = '[' + data + ']'; //make parseable by JSON
-            // var parsed = JSON.parse(data);
+            // let parsed = JSON.parse(data);
             // console.log('parsed:', parsed);
             res.send(data);
             // res.send(ReactDOMServer.renderToString(<TestFileSuite data={parsed}/>));
@@ -438,14 +438,14 @@ router.get('/:runId/:testId', function (req, res, next) {
 
 router.get('/:runId', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
+    let folder = path.resolve(outputDir);
 
     req.runId = req.params.runId;
     req.folder = folder;

@@ -1,5 +1,5 @@
 const React = require('react');
-var $ = require('jquery');
+let $ = require('jquery');
 const ReactDOM = require('react-dom');
 
 

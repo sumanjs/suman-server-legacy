@@ -1,8 +1,8 @@
 define(function (require, exports, module) {'use strict';
 
-var React = require('react');
+let React = require('react');
 
-var Section = React.createClass({
+let Section = React.createClass({
     displayName: 'Section',
 
 

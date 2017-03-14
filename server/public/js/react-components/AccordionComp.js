@@ -1,8 +1,8 @@
 define(function (require, exports, module) {'use strict';
 
-var React = require('react');
+let React = require('react');
 
-var Accordion = React.createClass({
+let Accordion = React.createClass({
     displayName: 'Accordion',
 
 
@@ -18,7 +18,7 @@ var Accordion = React.createClass({
     render: function render() {
 
         // enhance the section contents so we can track clicks and show sections
-        var children = React.Children.map(this.props.children, this.enhanceSection);
+        let children = React.Children.map(this.props.children, this.enhanceSection);
 
         return React.createElement(
             'div',
@@ -30,8 +30,8 @@ var Accordion = React.createClass({
     // return a cloned Section object with click tracking and 'active' awareness
     enhanceSection: function enhanceSection(child) {
 
-        var selectedId = this.state.selected;
-        var id = child.props.id;
+        let selectedId = this.state.selected;
+        let id = child.props.id;
 
         return React.cloneElement(child, {
             key: id,

@@ -6,7 +6,7 @@
 define(['react', 'react-dom'], function (React, ReactDOM) {
 
 
-    var ContactItem = React.createClass({
+    let ContactItem = React.createClass({
         propTypes: {
             name: React.PropTypes.string.isRequired
         },
@@ -20,7 +20,7 @@ define(['react', 'react-dom'], function (React, ReactDOM) {
         }
     });
 
-    var element = React.createElement(ContactItem, {name: "James K Nelson"});
+    let element = React.createElement(ContactItem, {name: "James K Nelson"});
 
     ReactDOM.render(element, document.getElementById('react-app'));
 

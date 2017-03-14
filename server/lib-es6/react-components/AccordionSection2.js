@@ -3,7 +3,7 @@
 const React = require('react');
 
 
-var Section = React.createClass({
+let Section = React.createClass({
     
     handleClick: function (e) {
 

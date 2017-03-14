@@ -34,9 +34,9 @@ process.env.SUMAN_EXTRANEOUS_EXECUTABLE = 'yes';
 
 process.on('message', function (m) {
 
-	var workId = m.workId;
-	var fp = m.msg.testPath;
-	var transpile = m.msg.transpile;
+	let workId = m.workId;
+	let fp = m.msg.testPath;
+	let transpile = m.msg.transpile;
 
 	if (!transpile) {
 		process.argv.push('--no-transpile');

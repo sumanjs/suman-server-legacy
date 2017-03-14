@@ -38,7 +38,7 @@ const helpers = require('./helpers');
 
 router.get('/', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
@@ -124,10 +124,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/done/:runId', function (req, res, next) {
 
-    var data = req.body.data;
+    let data = req.body.data;
 
     try {
-        var json = JSON.stringify(data.test);
+        let json = JSON.stringify(data.test);
 
         if (data.outputPath) {
             fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
@@ -146,17 +146,17 @@ router.post('/done/:runId', function (req, res, next) {
 
 router.post('/finalize', function (req, res, next) {
 
-    var body = req.body;
-    var rendered = body.rendered;
-    var timestamp = body.timestamp;
-    var outputDir = config.suman_home_dir;
+    let body = req.body;
+    let rendered = body.rendered;
+    let timestamp = body.timestamp;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var outputPath = path.resolve(outputDir + '/' + timestamp + '/temp.html');
+    let outputPath = path.resolve(outputDir + '/' + timestamp + '/temp.html');
 
     fs.writeFile(outputPath, rendered, (err) => {
         if (err) {
@@ -173,18 +173,18 @@ router.post('/finalize', function (req, res, next) {
 
 router.post('/make/new', function (req, res, next) {
 
-    var body = req.body;
-    var timestamp = body.timestamp;
+    let body = req.body;
+    let timestamp = body.timestamp;
 
     try {
-        var outputDir = config.suman_home_dir;
+        let outputDir = config.suman_home_dir;
 
         if (!outputDir) {
             console.error('no outputDir defined');
             return next(new Error('no outputDir defined'));
         }
 
-        var outputPath = path.resolve(outputDir + '/' + timestamp);
+        let outputPath = path.resolve(outputDir + '/' + timestamp);
 
         fs.mkdir(outputPath, function (err) {
             if (err) {
@@ -210,15 +210,15 @@ router.get('/latest', function (req, res, next) {
 
     //TODO: this should render git branch and commit
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
-    var runId = helpers.getPathOfMostRecentSubdir(folder);
+    let folder = path.resolve(outputDir);
+    let runId = helpers.getPathOfMostRecentSubdir(folder);
 
     if (!runId) {
         //TODO this will happen if the suman_results dir is deleted, we should add the folder if it gets deleted
@@ -293,7 +293,7 @@ function getRunId(req, res, next) {
             //     </html>
             // )));
 
-            // var data = ReactDOMServer.renderToString((
+            // let data = ReactDOMServer.renderToString((
             //     <html>
             //     <head>
             //
@@ -309,7 +309,7 @@ function getRunId(req, res, next) {
             //     </html>
             // ));
 
-            var j = 1;
+            let j = 1;
 
             const childData = [];
 
@@ -322,7 +322,7 @@ function getRunId(req, res, next) {
                     }
                     else {
 
-                        var lastChar = String(data).slice(-1);
+                        let lastChar = String(data).slice(-1);
                         if (lastChar === ',') {
                             data = String(data).substring(0, String(data).length - 1); //strip off trailing comma
                         }
@@ -330,9 +330,9 @@ function getRunId(req, res, next) {
                         data = JSON.parse('[' + data + ']'); //make parseable by JSON
 
 
-                        var topLevelDescribe = null;
+                        let topLevelDescribe = null;
 
-                        for (var i = 0; i < data.length; i++) {
+                        for (let i = 0; i < data.length; i++) {
                             const val = data[i];
                             if (val.testId === 0) {
                                 topLevelDescribe = val;
@@ -340,9 +340,9 @@ function getRunId(req, res, next) {
                             }
                         }
 
-                        var fileName = String(path.basename(item, '.txt'));
+                        let fileName = String(path.basename(item, '.txt'));
 
-                        var props = {
+                        let props = {
                             title: 'TestSuite: ' + topLevelDescribe.desc + ' @' + fileName,
                             id: j++,
                             runId: runId,
@@ -364,7 +364,7 @@ function getRunId(req, res, next) {
                     next(err);
                 }
                 else {
-                    var data = ReactDOMServer.renderToString(
+                    let data = ReactDOMServer.renderToString(
                         <Accordion title="Accordion Title Here">
                             {results}
                         </Accordion>
@@ -390,16 +390,16 @@ function getRunId(req, res, next) {
 
 router.get('/:runId/:testId', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
-    var runId = req.params.runId;
-    var testNum = req.params.testId;
+    let folder = path.resolve(outputDir);
+    let runId = req.params.runId;
+    let testNum = req.params.testId;
 
     fs.readFile(path.resolve(folder + '/' + runId + '/' + testNum + '.txt'), {}, function (err, data) {
 
@@ -408,13 +408,13 @@ router.get('/:runId/:testId', function (req, res, next) {
         }
         else {
 
-            var lastChar = String(data).slice(-1);
+            let lastChar = String(data).slice(-1);
             if (lastChar === ',') {
                 data = String(data).substring(0, String(data).length - 1); //strip off trailing comma
             }
 
             data = '[' + data + ']'; //make parseable by JSON
-            // var parsed = JSON.parse(data);
+            // let parsed = JSON.parse(data);
             // console.log('parsed:', parsed);
             res.send(data);
             // res.send(ReactDOMServer.renderToString(<TestFileSuite data={parsed}/>));
@@ -427,14 +427,14 @@ router.get('/:runId/:testId', function (req, res, next) {
 
 router.get('/:runId', function (req, res, next) {
 
-    var outputDir = config.suman_home_dir;
+    let outputDir = config.suman_home_dir;
 
     if (!outputDir) {
         console.error('no outputDir defined');
         return next(new Error('no outputDir defined'));
     }
 
-    var folder = path.resolve(outputDir);
+    let folder = path.resolve(outputDir);
 
     req.runId = req.params.runId;
     req.folder = folder;

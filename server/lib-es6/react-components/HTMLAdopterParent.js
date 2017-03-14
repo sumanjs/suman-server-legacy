@@ -14,8 +14,8 @@ module.exports = function (children) {
 
             return children.map(function (item) {
 
-                var Comp = item.comp;
-                var props = item.props;
+                let Comp = item.comp;
+                let props = item.props;
 
                 return (
                     <div>

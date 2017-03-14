@@ -3,7 +3,7 @@ const React = require('react');
 
 const Section = require('./AccordionSection2');
 
-var Accordion = React.createClass({
+let Accordion = React.createClass({
     displayName: 'Accordion',
 
     render: function () {

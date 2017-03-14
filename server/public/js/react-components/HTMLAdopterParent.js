@@ -4,7 +4,7 @@ define(function (require, exports, module) {"use strict";
  * Created by denmanm1 on 3/30/16.
  */
 
-var React = require('react');
+let React = require('react');
 
 module.exports = function (children) {
 
@@ -14,8 +14,8 @@ module.exports = function (children) {
 
             return children.map(function (item) {
 
-                var Comp = item.comp;
-                var props = item.props;
+                let Comp = item.comp;
+                let props = item.props;
 
                 return React.createElement(
                     "div",
