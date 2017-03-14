@@ -1,8 +1,6 @@
 'use strict';
 
-let _stringify = require('babel-runtime/core-js/json/stringify');
-
-let _stringify2 = _interopRequireDefault(_stringify);
+let _stringify2 = JSON.stringify;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38,7 +36,7 @@ module.exports = React.createClass({
                 'div',
                 { className: 'test-cases' },
                 'Test Cases:',
-                (0, _stringify2.default)(item.tests)
+                (0, _stringify2)(item.tests)
             ),
             React.createElement(
                 'div',

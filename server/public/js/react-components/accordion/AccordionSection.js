@@ -61,6 +61,7 @@ const AccordionSection = React.createClass({
                 console.log('resp:', resp);
                 this.state.testData = JSON.parse(resp);
                 this.forceUpdate();
+
             }).fail(() => {
 
                 this.state.testData = 'Bad server response';

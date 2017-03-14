@@ -1,8 +1,6 @@
 'use strict';
 
-let _stringify = require('babel-runtime/core-js/json/stringify');
-
-let _stringify2 = _interopRequireDefault(_stringify);
+let _stringify2 = JSON.stringify;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -46,7 +44,7 @@ router.post('/done/:runId', function (req, res, next) {
 	let data = body.data;
 
 	try {
-		let json = (0, _stringify2.default)(data.test);
+		let json = (0, _stringify2)(data.test);
 
 		if (data.outputPath) {
 			fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
