@@ -76,7 +76,6 @@ gulp.task('convert', ['transpile-lib'], function (cb) {   //convert commonjs to 
 
 
 gulp.task('webpack', ['transpile-lib'], function (cb) {
-
     const n = cp.spawn('webpack');
     n.on('close', cb);
     n.stderr.setEncoding('utf8');
