@@ -5,7 +5,6 @@
  */
 
 let React = require('react');
-
 let TestFileSuite = require('./TestFileSuite');
 
 module.exports = React.createClass({

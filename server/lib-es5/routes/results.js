@@ -1,9 +1,5 @@
 'use strict';
 
-let _stringify2 = JSON.stringify;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 /**
  * Created by denman on 12/16/15.
  */
@@ -12,6 +8,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 let config = require('adore')(module, '*suman*', 'server/config/conf');
 
 //#core
+let util = require('util');
 let fs = require('fs');
 let os = require('os');
 let path = require('path');
@@ -25,7 +22,7 @@ let express = require('express');
 let router = express.Router();
 let _ = require('underscore');
 
-//#project
+//project
 
 //react-components
 
@@ -38,6 +35,7 @@ let AccordionSection = require('../react-components/AccordionSection');
 //#helpers
 let helpers = require('./helpers');
 // const findSumanServer = require('../../lib/find-suman-server');
+
 
 router.get('/', function (req, res, next) {
 
@@ -164,10 +162,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/done/:runId', function (req, res, next) {
 
-    let data = body.data;
+    let data = req.body.data;
 
     try {
-        let json = (0, _stringify2)(data.test);
+        let json = JSON.stringify(data.test);
 
         if (data.outputPath) {
             fs.appendFileSync(data.outputPath, json += ','); //we write synchronous because we have to ensure data doesn't get malformed in files on disk
@@ -338,7 +336,7 @@ function getRunId(req, res, next) {
 
                 let childData = [];
 
-                async.each(items, function (item, cb) {
+                async.map(items, function (item, cb) {
 
                     fs.readFile(path.resolve(dirName + '/' + item), {}, function (err, data) {
 
@@ -388,11 +386,12 @@ function getRunId(req, res, next) {
                             results
                         ));
 
-                        // res.send(data);
+                        console.log('data in results => ', data);
+                        console.log('childData in results => ', util.inspect(childData));
 
-                        res.render('index', {
+                        res.render('results', {
                             data: data,
-                            childData: (0, _stringify2)(childData)
+                            childData: JSON.stringify(childData)
                         });
                     }
                 });

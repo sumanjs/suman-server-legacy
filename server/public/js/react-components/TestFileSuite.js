@@ -36,11 +36,11 @@ module.exports = React.createClass({
                 tests.complete ? React.createElement(
                     'span',
                     { className: 'items', id: 'tick' },
-                    '✓'
+                    '\u2713'
                 ) : React.createElement(
                     'span',
                     { className: 'items', id: 'cross' },
-                    '✗'
+                    '\u2717'
                 ),
                 ', Type: ',
                 React.createElement(

@@ -2,16 +2,11 @@
  * Created by denmanm1 on 3/30/16.
  */
 
-
-
 const React = require('react');
-
 const TestFileSuite = require('./TestFileSuite');
 
-
 module.exports = React.createClass({
-    
-    
+
    render: function(){
 
       return (

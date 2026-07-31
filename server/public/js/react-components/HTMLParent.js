@@ -5,7 +5,6 @@ define(function (require, exports, module) {'use strict';
  */
 
 let React = require('react');
-
 let TestFileSuite = require('./TestFileSuite');
 
 module.exports = React.createClass({

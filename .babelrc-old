@@ -3,5 +3,5 @@
     "es2015",
     "stage-3"
   ],
-  "plugins":  []
+  "plugins": ["transform-runtime"]
 }

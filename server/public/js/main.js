@@ -19,7 +19,7 @@ requirejs.config({
         'async': '//cdnjs.cloudflare.com/ajax/libs/async/1.5.0/async.min',
         'jquery': '//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min',
         'flux': '//cdnjs.cloudflare.com/ajax/libs/flux/2.1.1/Flux.min',
-        'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min',
+        // 'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min',
         'react': '//cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react',
         'react-dom': '//cdnjs.cloudflare.com/ajax/libs/react/0.14.3/react-dom',
         'socketio': '//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.7/socket.io.min',
@@ -50,18 +50,31 @@ requirejs.onResourceLoad = function (context, map, depArray) {
 };
 
 
-require(['jquery', 'flux', 'socketio', 'react', 'react-dom', 'underscore', 'async', 'lodash'], function () {
+require(['bundles/babel-runtime','jquery'], function (br, $) {
 
-    $(document).ready(function () {
+    console.log(' babel-polyfill => ', window['babel-polyfill']);
+    console.log(' underscore => ', window['underscore']);
+
+   // require(['underscore', 'babel-polyfill'], function(_, br){
+   //
+   //     console.log(' under => ', _);
+   //     console.log('br => ', br);
+   //     console.log('flattened => ', _.flatten([1,[2,3,[4]]]));
+   // });
 
 
-        require(['js/pages/results/app'], function (Application) {
-            console.log('Application module loaded ----> (3) ----> time:', (Date.now() - window.startDate));
-            Application.start();
-        });
+    console.log('br => ', br);
+    console.log('$$$$ => ', $);
 
-
-    });
+    // $(document).ready(function () {
+    //
+    //     require(['js/pages/results/app'], function (Application) {
+    //         console.log('Application module loaded ----> (3) ----> time:', (Date.now() - window.startDate));
+    //         Application.start();
+    //     });
+    //
+    //
+    // });
 
 });
 

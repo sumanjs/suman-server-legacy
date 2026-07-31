@@ -15,9 +15,9 @@ let router = express.Router();
 
 router.get('/', function (req, res) {
 
-  res.render('index',{
-    childData: {},
-    data:{}
+  res.render('index', {
+    childData: JSON.stringify([]),
+    data: ' here is some data in index file !'
   });
 });
 

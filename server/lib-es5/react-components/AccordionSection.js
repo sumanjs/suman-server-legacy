@@ -3,7 +3,6 @@
 let React = require('react');
 let $ = require('jquery');
 let ReactDOM = require('react-dom');
-
 let TestFileSuite = require('./TestFileSuite');
 
 let AccordionSection = React.createClass({
@@ -58,11 +57,12 @@ let AccordionSection = React.createClass({
 
             }).done(function (resp) {
 
-                console.log('resp:', resp);
+                console.log('resp!!!:', resp);
                 _this.state.testData = JSON.parse(resp);
                 _this.forceUpdate();
             }).fail(function () {
 
+                console.log('bad server response!');
                 _this.state.testData = 'Bad server response';
                 _this.forceUpdate();
             });
